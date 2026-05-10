@@ -4,14 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Sphere · Experiencia Inmersiva</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;600&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #04040f;
-      --bg2: #080820;
       --gold: #f5c842;
       --gold-dim: #c49a1a;
       --cyan: #00d4ff;
@@ -19,2122 +16,268 @@
       --neon-g: #00ff88;
       --red: #ff4f6b;
       --glass: rgba(255,255,255,0.04);
-      --glass-border: rgba(255,255,255,0.08);
+      --glass-b: rgba(255,255,255,0.08);
     }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: #e0e0f0;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 400;
-      overflow-x: hidden;
-    }
-
-    /* ─── SCROLLBAR ─────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
+    body { background: var(--bg); color: #e0e0f0; font-family: 'Raleway', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+    #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* ─── PARTICLES CANVAS ──────────────────────────────────── */
-    #stars-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+    /* ── LAYOUT ── */
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px 60px; }
 
-    /* ─── ENTRY OVERLAY ─────────────────────────────────────── */
-    #entry {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(ellipse at center, #0d0830 0%, #04040f 70%);
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    #entry.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    /* ── SPHERE ── */
+    #sphere-canvas { width: 260px; height: 260px; filter: drop-shadow(0 0 50px rgba(245,200,66,0.55)); animation: float 4s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
 
-    #sphere-canvas {
-      width: 320px;
-      height: 320px;
-      filter: drop-shadow(0 0 40px rgba(245,200,66,0.5));
-      animation: float 4s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-18px); }
-    }
-
-    .entry-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(2.2rem, 6vw, 4.5rem);
-      font-weight: 900;
-      letter-spacing: 0.15em;
-      background: linear-gradient(135deg, #f5c842, #ff9a3c, #f5c842);
-      background-size: 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 3s linear infinite;
-      text-align: center;
-      margin-top: -16px;
-    }
-    @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
-
-    .entry-sub {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-top: 6px;
-      margin-bottom: 32px;
-    }
-
-    /* NOVA bubble */
-    #nova-entry {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(16px);
-      border-radius: 20px;
-      max-width: 520px;
-      width: 90%;
-      padding: 24px 28px;
-      animation: fadeUp 0.8s ease 0.4s both;
-    }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-    .nova-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .nova-orb {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #00ff88, #00a855, #003320);
-      box-shadow: 0 0 20px rgba(0,255,136,0.6), 0 0 40px rgba(0,255,136,0.2);
-      animation: pulse-orb 2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    @keyframes pulse-orb {
-      0%,100%{box-shadow:0 0 20px rgba(0,255,136,0.6),0 0 40px rgba(0,255,136,0.2)}
-      50%{box-shadow:0 0 30px rgba(0,255,136,0.9),0 0 60px rgba(0,255,136,0.4)}
-    }
-    .nova-name {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--neon-g);
-    }
-    .nova-title-text { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
-
-    .nova-message {
-      font-size: 0.95rem;
-      line-height: 1.65;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 20px;
-    }
-    .nova-message span { color: var(--neon-g); font-weight: 600; }
-
-    .entry-options {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .entry-btn {
-      flex: 1;
-      min-width: 130px;
-      padding: 12px 16px;
-      border: 1px solid var(--glass-border);
-      background: var(--glass);
-      color: #fff;
-      font-family: 'Raleway', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-align: center;
-      letter-spacing: 0.05em;
-    }
-    .entry-btn:hover { transform: translateY(-3px); }
-    .entry-btn.btn-esfera { border-color: var(--gold); color: var(--gold); }
-    .entry-btn.btn-esfera:hover { background: rgba(245,200,66,0.15); box-shadow: 0 0 20px rgba(245,200,66,0.3); }
-    .entry-btn.btn-arte { border-color: var(--cyan); color: var(--cyan); }
-    .entry-btn.btn-arte:hover { background: rgba(0,212,255,0.12); box-shadow: 0 0 20px rgba(0,212,255,0.3); }
-    .entry-btn.btn-musica { border-color: var(--purple); color: var(--purple); }
-    .entry-btn.btn-musica:hover { background: rgba(155,89,245,0.15); box-shadow: 0 0 20px rgba(155,89,245,0.3); }
-
-    .skip-btn {
-      margin-top: 28px;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.3);
-      cursor: pointer;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border: none;
-      background: none;
-      transition: color 0.3s;
-    }
-    .skip-btn:hover { color: rgba(255,255,255,0.6); }
-
-    /* ─── NAV ────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-      background: rgba(4,4,15,0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border);
-    }
-    .nav-logo {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-decoration: none;
-    }
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    .nav-links a:hover, .nav-links a.active { color: #fff; }
-    .nav-links a.sec-esfera:hover { color: var(--gold); }
-    .nav-links a.sec-arte:hover { color: var(--cyan); }
-    .nav-links a.sec-musica:hover { color: var(--purple); }
-
-    .nav-nova-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border: 1px solid rgba(0,255,136,0.3);
-      border-radius: 20px;
-      background: rgba(0,255,136,0.05);
-      color: var(--neon-g);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .nav-nova-btn:hover { background: rgba(0,255,136,0.12); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
-    .nav-nova-orb { width: 8px; height: 8px; border-radius: 50%; background: var(--neon-g); animation: pulse-orb 2s infinite; }
-
-    /* ─── MAIN CONTENT ──────────────────────────────────────── */
-    main { position: relative; z-index: 1; }
-
-    /* ─── HERO SECTION ──────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: 100px 40px 60px;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(245,200,66,0.08) 0%, transparent 70%);
-    }
-    .hero-content {
-      text-align: center;
-      max-width: 800px;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.4em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.3s forwards;
-    }
     .hero-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(3rem, 8vw, 7rem);
+      font-size: clamp(2.6rem, 8vw, 5.5rem);
       font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.5s forwards;
-    }
-    .hero-title .line1 {
-      background: linear-gradient(135deg, #f5c842, #ff9a3c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-title .line2 { color: rgba(255,255,255,0.9); font-size: 0.45em; display: block; letter-spacing: 0.25em; margin-top: 8px; }
-    .hero-desc {
-      font-size: 1.05rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.6);
-      max-width: 600px;
-      margin: 0 auto 40px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.7s forwards;
-    }
-    .hero-stats {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.9s forwards;
-    }
-    .hero-stat {
+      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, #f5c842 0%, #ff9a3c 50%, #f5c842 100%);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: shimmer 3s linear infinite;
+      margin-top: -6px;
       text-align: center;
-      padding: 16px 24px;
+    }
+    @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+    .hero-sub { font-size: 0.68rem; letter-spacing: 0.5em; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-top: 6px; text-align: center; }
+
+    /* ── NOVA GREETING ── */
+    .nova-bubble {
+      margin-top: 28px;
       background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      backdrop-filter: blur(12px);
-      min-width: 110px;
-    }
-    .hero-stat-num {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--gold);
-      display: block;
-    }
-    .hero-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; display: block; }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: rgba(255,255,255,0.3);
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      animation: bounce 2s ease-in-out infinite;
-    }
-    .scroll-arrow { width: 1px; height: 40px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3)); }
-    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
-
-    /* ─── SECTION SHARED STYLES ─────────────────────────────── */
-    section {
-      position: relative;
-      z-index: 1;
-      padding: 100px 40px;
-    }
-    .section-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.5em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      display: block;
-    }
-    .section-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 20px;
-    }
-    .section-desc {
-      font-size: 1rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.6);
-      max-width: 680px;
-      margin-bottom: 60px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── SECTION 1: LA ESFERA ───────────────────────────────── */
-    #esfera {
-      background: linear-gradient(180deg, var(--bg) 0%, #0a0820 50%, var(--bg) 100%);
-    }
-    #esfera .section-label { color: var(--gold); }
-    #esfera .section-title { background: linear-gradient(135deg, #f5c842, #ff9a3c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
-    .esfera-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .esfera-text { display: flex; flex-direction: column; gap: 20px; }
-    .esfera-p { font-size: 0.97rem; line-height: 1.9; color: rgba(255,255,255,0.65); }
-    .esfera-p strong { color: var(--gold); font-weight: 600; }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .spec-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 20px;
-      backdrop-filter: blur(12px);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .spec-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      opacity: 0.6;
-    }
-    .spec-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(245,200,66,0.1); }
-    .spec-icon { font-size: 1.5rem; margin-bottom: 8px; }
-    .spec-num { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); }
-    .spec-unit { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
-    .spec-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 4px; letter-spacing: 0.08em; }
-
-    .timeline {
-      margin-top: 80px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .timeline-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.2rem;
-      color: var(--gold);
-      margin-bottom: 40px;
-      text-align: center;
-      letter-spacing: 0.2em;
-    }
-    .timeline-items { position: relative; }
-    .timeline-items::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, var(--gold-dim), transparent);
-      transform: translateX(-50%);
-    }
-    .tl-item {
-      display: flex;
-      gap: 40px;
-      margin-bottom: 40px;
-      align-items: flex-start;
-    }
-    .tl-item:nth-child(odd) { flex-direction: row; }
-    .tl-item:nth-child(even) { flex-direction: row-reverse; }
-    .tl-content {
-      flex: 1;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
+      border: 1px solid var(--glass-b);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
       padding: 20px 24px;
-      backdrop-filter: blur(12px);
-    }
-    .tl-item:nth-child(odd) .tl-content { text-align: right; }
-    .tl-dot {
-      flex-shrink: 0;
-      width: 40px;
-      display: flex;
-      justify-content: center;
-      padding-top: 6px;
-    }
-    .tl-dot-inner {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 12px rgba(245,200,66,0.6);
-    }
-    .tl-year { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: var(--gold); font-weight: 600; }
-    .tl-event { font-size: 0.88rem; color: rgba(255,255,255,0.7); margin-top: 4px; line-height: 1.5; }
-
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      max-width: 1000px;
-      margin: 80px auto 0;
-    }
-    .tech-card {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 28px 24px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .tech-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.05), transparent 60%);
-      pointer-events: none;
-    }
-    .tech-card:hover { transform: translateY(-6px); border-color: rgba(245,200,66,0.3); }
-    .tech-icon { font-size: 2.2rem; margin-bottom: 14px; }
-    .tech-name { font-family: 'Orbitron', sans-serif; font-size: 0.78rem; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 10px; }
-    .tech-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.65; }
-
-    /* ─── SECTION 2: ARTE INMERSIVO ─────────────────────────── */
-    #arte {
-      background: linear-gradient(180deg, var(--bg) 0%, #060820 40%, #080f20 60%, var(--bg) 100%);
-    }
-    #arte .section-label { color: var(--cyan); }
-    #arte .section-title { background: linear-gradient(135deg, #00d4ff, #8b59f5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
-    .arte-divider {
-      display: flex;
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      overflow: hidden;
-      max-width: 600px;
-      margin: 0 auto 60px;
-    }
-    .arte-tab {
-      flex: 1;
-      padding: 14px 20px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.4);
-      transition: all 0.3s;
-      background: transparent;
-      border: none;
-    }
-    .arte-tab.active-rain { background: rgba(0,212,255,0.1); color: var(--cyan); }
-    .arte-tab.active-postcard { background: rgba(155,89,245,0.1); color: var(--purple); }
-    .arte-tab:not(.active-rain):not(.active-postcard):hover { color: rgba(255,255,255,0.7); }
-
-    .arte-panel { display: none; animation: fadeUp 0.5s ease; }
-    .arte-panel.visible { display: block; }
-
-    /* RAIN ROOM */
-    .rain-hero {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      min-height: 340px;
-      display: flex;
-      align-items: flex-end;
-      margin-bottom: 40px;
-    }
-    .rain-bg {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #020b18 0%, #041a2e 50%, #030811 100%);
-    }
-    .rain-drops-container {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    .rain-info {
-      position: relative;
-      z-index: 2;
-      padding: 40px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+      max-width: 460px;
       width: 100%;
+      animation: fadeUp 0.8s ease 0.4s both;
     }
-    .rain-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--cyan); margin-bottom: 8px; }
-    .rain-artist { font-size: 0.78rem; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; text-transform: uppercase; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    .nova-row { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+    .nova-orb { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #00ff88, #00a855, #003320); box-shadow: 0 0 18px rgba(0,255,136,0.65); animation: porb 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes porb { 0%,100%{box-shadow:0 0 18px rgba(0,255,136,0.65)} 50%{box-shadow:0 0 28px rgba(0,255,136,1),0 0 50px rgba(0,255,136,0.3)} }
+    .nova-label { font-family: 'Orbitron', sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; color: var(--neon-g); }
+    .nova-msg { font-size: 0.88rem; line-height: 1.65; color: rgba(255,255,255,0.78); }
+    .nova-msg strong { color: var(--neon-g); }
 
-    .art-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      max-width: 1100px;
-      margin: 0 auto;
+    /* ── NAV CARDS ── */
+    .cards { display: flex; gap: 18px; margin-top: 32px; max-width: 960px; width: 100%; }
+    .card {
+      flex: 1; border-radius: 22px; padding: 28px 24px; cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s, border-color 0.4s;
+      position: relative; overflow: hidden; min-height: 230px;
+      display: flex; flex-direction: column; backdrop-filter: blur(10px);
+      text-decoration: none; color: inherit;
     }
+    .card:hover { transform: translateY(-10px); }
+    .card-num { font-family: 'Orbitron', sans-serif; font-size: 0.55rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.18); margin-bottom: 14px; }
+    .card-visual { flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .card-title { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 7px; }
+    .card-desc { font-size: 0.8rem; line-height: 1.58; color: rgba(255,255,255,0.42); flex: 1; margin-bottom: 18px; }
+    .card-cta { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 7px; }
+    .cta-arr { transition: transform 0.3s; display: inline-block; }
+    .card:hover .cta-arr { transform: translateX(7px); }
 
-    .art-block-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--glass-border);
-    }
-    .rain-text .art-block-title { color: var(--cyan); border-color: rgba(0,212,255,0.3); }
-    .postcard-text .art-block-title { color: var(--purple); border-color: rgba(155,89,245,0.3); }
+    /* individual colors */
+    .c-esfera { background: linear-gradient(135deg,rgba(245,200,66,.07),rgba(60,35,0,.32)); border: 1px solid rgba(245,200,66,.16); }
+    .c-esfera:hover { border-color: rgba(245,200,66,.5); box-shadow: 0 22px 55px rgba(245,200,66,.15); }
+    .c-esfera .card-title, .c-esfera .card-cta { color: var(--gold); }
 
-    .art-p { font-size: 0.9rem; line-height: 1.85; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
-    .art-p strong { color: #fff; font-weight: 600; }
+    .c-arte { background: linear-gradient(135deg,rgba(0,212,255,.05),rgba(0,35,60,.32)); border: 1px solid rgba(0,212,255,.14); }
+    .c-arte:hover { border-color: rgba(0,212,255,.5); box-shadow: 0 22px 55px rgba(0,212,255,.12); }
+    .c-arte .card-title, .c-arte .card-cta { color: var(--cyan); }
 
-    .sensory-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-    }
-    .pill {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-    .pill-cyan { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); }
-    .pill-purple { background: rgba(155,89,245,0.12); border: 1px solid rgba(155,89,245,0.3); color: var(--purple); }
-    .pill-gray { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+    .c-musica { background: linear-gradient(135deg,rgba(155,89,245,.07),rgba(25,0,60,.32)); border: 1px solid rgba(155,89,245,.16); }
+    .c-musica:hover { border-color: rgba(155,89,245,.5); box-shadow: 0 22px 55px rgba(155,89,245,.15); }
+    .c-musica .card-title, .c-musica .card-cta { color: var(--purple); }
 
-    .quote-block {
-      border-left: 3px solid;
-      padding: 16px 20px;
-      margin: 24px 0;
-      border-radius: 0 12px 12px 0;
-      font-style: italic;
-      font-size: 0.88rem;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.7);
-    }
-    .quote-rain { border-color: var(--cyan); background: rgba(0,212,255,0.05); }
-    .quote-postcard { border-color: var(--purple); background: rgba(155,89,245,0.05); }
+    /* card visuals */
+    .sph-mini { width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%,#fff8d0,#f5c842,#8a5c00); box-shadow: 0 0 28px rgba(245,200,66,.45); position: relative; }
+    .sph-mini::after { content:''; position:absolute; inset:-12px; border-radius:50%; border:1px solid rgba(0,212,255,.35); animation: spin-ring 5s linear infinite; }
+    @keyframes spin-ring { from{transform:rotate(0deg) scaleY(0.28)} to{transform:rotate(360deg) scaleY(0.28)} }
 
-    .data-card {
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 24px;
-    }
-    .data-card.cyan { background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); }
-    .data-card.purple { background: rgba(155,89,245,0.05); border: 1px solid rgba(155,89,245,0.2); }
-    .data-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.83rem; }
-    .data-item:last-child { border-bottom: none; }
-    .data-key { color: rgba(255,255,255,0.45); }
-    .data-val { font-weight: 600; }
-    .cyan .data-val { color: var(--cyan); }
-    .purple .data-val { color: var(--purple); }
+    .rain-mini { width:80px; height:70px; position:relative; overflow:hidden; }
+    .rdrop { position:absolute; width:1px; background:linear-gradient(to bottom,transparent,rgba(0,212,255,.7)); animation:rfal linear infinite; }
+    @keyframes rfal { from{transform:translateY(-10px);opacity:0} 15%{opacity:1} 85%{opacity:1} to{transform:translateY(80px);opacity:0} }
 
-    /* POSTCARD FROM EARTH */
-    .postcard-hero {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      min-height: 340px;
-      display: flex;
-      align-items: flex-end;
-      margin-bottom: 40px;
-      background: linear-gradient(135deg, #0a0520 0%, #1a0535 40%, #2a0a10 100%);
-    }
-    .planet-bg {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    .postcard-info {
-      position: relative;
-      z-index: 2;
-      padding: 40px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-      width: 100%;
-    }
-    .postcard-title { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; color: var(--purple); margin-bottom: 8px; line-height: 1.2; }
-    .postcard-artist { font-size: 0.78rem; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; text-transform: uppercase; }
+    .wave-mini { display:flex; align-items:center; gap:3px; height:60px; width:100px; }
+    .wbar { flex:1; border-radius:3px; animation:wv ease-in-out infinite alternate; }
+    @keyframes wv { from{transform:scaleY(.15)} to{transform:scaleY(1)} }
 
-    /* ─── SECTION 3: MÚSICA ─────────────────────────────────── */
-    #musica {
-      background: linear-gradient(180deg, var(--bg) 0%, #120520 40%, #0a0a20 70%, var(--bg) 100%);
-    }
-    #musica .section-label { color: var(--purple); }
-    #musica .section-title { background: linear-gradient(135deg, #9b59f5, #ff4f6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    /* ── NOVA CHAT ── */
+    #nova-fab { position:fixed; bottom:26px; right:26px; z-index:200; display:flex; align-items:center; gap:9px; padding:11px 17px; background:rgba(3,6,18,.93); border:1px solid rgba(0,255,136,.32); border-radius:40px; cursor:pointer; backdrop-filter:blur(20px); transition:all .3s; box-shadow:0 0 18px rgba(0,255,136,.1); }
+    #nova-fab:hover { border-color:rgba(0,255,136,.6); box-shadow:0 0 26px rgba(0,255,136,.2); transform:translateY(-2px); }
+    .forb { width:8px; height:8px; border-radius:50%; background:var(--neon-g); animation:porb 1.5s infinite; }
+    .ftxt { font-family:'Orbitron',sans-serif; font-size:.6rem; letter-spacing:.15em; color:var(--neon-g); }
+    #nova-panel { position:fixed; bottom:78px; right:26px; z-index:200; width:355px; max-height:510px; background:rgba(3,3,18,.97); border:1px solid rgba(0,255,136,.16); border-radius:22px; backdrop-filter:blur(24px); display:flex; flex-direction:column; overflow:hidden; transition:all .35s cubic-bezier(.23,1,.32,1); transform-origin:bottom right; }
+    #nova-panel.closed { opacity:0; pointer-events:none; transform:scale(.82) translateY(14px); }
+    .ph { padding:15px 17px; border-bottom:1px solid rgba(255,255,255,.05); display:flex; align-items:center; gap:10px; }
+    .p-orb { width:32px; height:32px; border-radius:50%; background:radial-gradient(circle at 35% 35%,#00ff88,#00a855,#003320); box-shadow:0 0 13px rgba(0,255,136,.5); animation:porb 2s infinite; flex-shrink:0; }
+    .pn { font-family:'Orbitron',sans-serif; font-size:.62rem; letter-spacing:.14em; color:var(--neon-g); }
+    .ps { font-size:.62rem; color:rgba(0,255,136,.42); margin-top:2px; }
+    .pcl { margin-left:auto; background:none; border:none; color:rgba(255,255,255,.32); cursor:pointer; font-size:1.05rem; padding:4px; transition:color .2s; }
+    .pcl:hover { color:#fff; }
+    .pmsgs { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:11px; }
+    .pmsgs::-webkit-scrollbar { width:3px; }
+    .pmsgs::-webkit-scrollbar-thumb { background:rgba(0,255,136,.18); }
+    .m { max-width:88%; animation:fadeUp .3s ease; }
+    .m.n { align-self:flex-start; }
+    .m.u { align-self:flex-end; }
+    .mb { padding:9px 13px; border-radius:15px; font-size:.83rem; line-height:1.58; }
+    .m.n .mb { background:rgba(0,255,136,.07); border:1px solid rgba(0,255,136,.12); color:rgba(255,255,255,.84); border-radius:4px 15px 15px 15px; }
+    .m.u .mb { background:rgba(155,89,245,.13); border:1px solid rgba(155,89,245,.2); color:rgba(255,255,255,.84); border-radius:15px 4px 15px 15px; }
+    .sugs { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+    .sg { padding:5px 10px; border:1px solid rgba(0,255,136,.22); border-radius:11px; font-size:.73rem; color:var(--neon-g); cursor:pointer; transition:all .2s; background:transparent; font-family:'Raleway',sans-serif; }
+    .sg:hover { background:rgba(0,255,136,.1); }
+    .typ-w { display:flex; gap:5px; align-items:center; padding:9px 13px; background:rgba(0,255,136,.07); border:1px solid rgba(0,255,136,.12); border-radius:4px 15px 15px 15px; width:fit-content; }
+    .dot { width:5px; height:5px; border-radius:50%; background:var(--neon-g); animation:blink 1.2s infinite; }
+    .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+    @keyframes blink { 0%,100%{opacity:.2;transform:scale(.7)} 50%{opacity:1;transform:scale(1)} }
+    .pinp { padding:11px 13px; border-top:1px solid rgba(255,255,255,.05); display:flex; gap:8px; align-items:center; }
+    .pi { flex:1; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:11px; padding:8px 12px; color:#fff; font-family:'Raleway',sans-serif; font-size:.83rem; outline:none; transition:border-color .3s; }
+    .pi:focus { border-color:rgba(0,255,136,.28); }
+    .pi::placeholder { color:rgba(255,255,255,.2); }
+    .psnd { width:34px; height:34px; border-radius:50%; background:rgba(0,255,136,.12); border:1px solid rgba(0,255,136,.26); color:var(--neon-g); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; font-size:.9rem; flex-shrink:0; }
+    .psnd:hover { background:rgba(0,255,136,.22); }
 
-    .music-tabs {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 60px;
-      justify-content: center;
-    }
-    .music-tab {
-      padding: 14px 32px;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 1px solid transparent;
-      background: var(--glass);
-    }
-    .music-tab.active-u2 { background: rgba(255,79,107,0.15); border-color: var(--red); color: var(--red); }
-    .music-tab.active-bsb { background: rgba(155,89,245,0.15); border-color: var(--purple); color: var(--purple); }
-    .music-tab:not(.active-u2):not(.active-bsb) { border-color: var(--glass-border); color: rgba(255,255,255,0.4); }
-    .music-tab:not(.active-u2):not(.active-bsb):hover { color: rgba(255,255,255,0.7); }
-
-    .music-panel { display: none; animation: fadeUp 0.5s ease; }
-    .music-panel.visible { display: block; }
-
-    .music-hero {
-      border-radius: 24px;
-      overflow: hidden;
-      position: relative;
-      min-height: 300px;
-      display: flex;
-      align-items: flex-end;
-      margin-bottom: 40px;
-    }
-    .u2-bg {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #1a0008 0%, #300010 40%, #1a0520 100%);
-      overflow: hidden;
-    }
-    .bsb-bg {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #08001a 0%, #1a0535 50%, #0a0020 100%);
-      overflow: hidden;
-    }
-    .music-hero-info {
-      position: relative;
-      z-index: 2;
-      padding: 40px;
-      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
-      width: 100%;
-    }
-    .u2-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--red); }
-    .bsb-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--purple); }
-    .music-subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.45); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px; }
-
-    .music-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .u2-block .art-block-title { color: var(--red); border-color: rgba(255,79,107,0.3); }
-    .bsb-block .art-block-title { color: var(--purple); border-color: rgba(155,89,245,0.3); }
-
-    .sensory-bar {
-      margin: 8px 0;
-    }
-    .sensory-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 5px;
-    }
-    .sensory-bar-track {
-      height: 4px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .sensory-bar-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width 1.5s ease;
-      width: 0%;
-    }
-    .fill-red { background: linear-gradient(90deg, rgba(255,79,107,0.5), var(--red)); }
-    .fill-purple { background: linear-gradient(90deg, rgba(155,89,245,0.5), var(--purple)); }
-
-    .quote-u2 { border-left: 3px solid var(--red); background: rgba(255,79,107,0.05); border-radius: 0 12px 12px 0; padding: 16px 20px; font-style: italic; font-size: 0.88rem; line-height: 1.75; color: rgba(255,255,255,0.7); margin: 20px 0; }
-    .quote-bsb { border-left: 3px solid var(--purple); background: rgba(155,89,245,0.05); border-radius: 0 12px 12px 0; padding: 16px 20px; font-style: italic; font-size: 0.88rem; line-height: 1.75; color: rgba(255,255,255,0.7); margin: 20px 0; }
-
-    /* ─── SYNTHESIS SECTION ─────────────────────────────────── */
-    #synthesis {
-      padding: 80px 40px;
-      background: var(--bg);
-      position: relative;
-      z-index: 1;
-    }
-    .synthesis-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .synthesis-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      background: linear-gradient(135deg, var(--gold), var(--cyan), var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 24px;
-    }
-    .synthesis-text {
-      font-size: 0.97rem;
-      line-height: 1.9;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 16px;
-    }
-    .team-box {
-      margin-top: 60px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 32px 40px;
-      display: inline-block;
-    }
-    .team-label { font-size: 0.68rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
-    .team-name { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #fff; margin-bottom: 20px; }
-    .team-members {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .team-member { font-size: 0.85rem; color: rgba(255,255,255,0.55); }
-
-    /* ─── FOOTER ────────────────────────────────────────────── */
-    footer {
-      padding: 40px;
-      text-align: center;
-      border-top: 1px solid var(--glass-border);
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.2);
-      letter-spacing: 0.15em;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ─── NOVA CHAT ──────────────────────────────────────────── */
-    #nova-fab {
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 20px;
-      background: rgba(0,10,20,0.9);
-      border: 1px solid rgba(0,255,136,0.4);
-      border-radius: 40px;
-      cursor: pointer;
-      backdrop-filter: blur(20px);
-      transition: all 0.3s;
-      box-shadow: 0 0 20px rgba(0,255,136,0.15);
-    }
-    #nova-fab:hover { border-color: rgba(0,255,136,0.7); box-shadow: 0 0 30px rgba(0,255,136,0.25); transform: translateY(-2px); }
-    .fab-orb { width: 10px; height: 10px; border-radius: 50%; background: var(--neon-g); animation: pulse-orb 1.5s infinite; }
-    .fab-text { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--neon-g); }
-
-    #nova-panel {
-      position: fixed;
-      bottom: 90px;
-      right: 32px;
-      z-index: 200;
-      width: 380px;
-      max-height: 540px;
-      background: rgba(4,4,20,0.95);
-      border: 1px solid rgba(0,255,136,0.2);
-      border-radius: 24px;
-      backdrop-filter: blur(24px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
-      transform-origin: bottom right;
-    }
-    #nova-panel.closed {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.8) translateY(20px);
-    }
-
-    .nova-panel-header {
-      padding: 18px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .nova-panel-orb {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #00ff88, #00a855, #003320);
-      box-shadow: 0 0 16px rgba(0,255,136,0.5);
-      animation: pulse-orb 2s infinite;
-      flex-shrink: 0;
-    }
-    .nova-panel-name { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--neon-g); }
-    .nova-panel-status { font-size: 0.68rem; color: rgba(0,255,136,0.5); margin-top: 2px; }
-    .nova-close {
-      margin-left: auto;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.4);
-      cursor: pointer;
-      font-size: 1.2rem;
-      line-height: 1;
-      padding: 4px;
-      transition: color 0.2s;
-    }
-    .nova-close:hover { color: #fff; }
-
-    .nova-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .nova-messages::-webkit-scrollbar { width: 4px; }
-    .nova-messages::-webkit-scrollbar-thumb { background: rgba(0,255,136,0.2); }
-
-    .msg { max-width: 85%; animation: fadeUp 0.3s ease; }
-    .msg.nova { align-self: flex-start; }
-    .msg.user { align-self: flex-end; }
-
-    .msg-bubble {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-    .msg.nova .msg-bubble {
-      background: rgba(0,255,136,0.08);
-      border: 1px solid rgba(0,255,136,0.15);
-      color: rgba(255,255,255,0.85);
-      border-radius: 4px 16px 16px 16px;
-    }
-    .msg.user .msg-bubble {
-      background: rgba(155,89,245,0.15);
-      border: 1px solid rgba(155,89,245,0.25);
-      color: rgba(255,255,255,0.85);
-      border-radius: 16px 4px 16px 16px;
-    }
-
-    .nova-suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .suggestion {
-      padding: 5px 10px;
-      border: 1px solid rgba(0,255,136,0.2);
-      border-radius: 12px;
-      font-size: 0.75rem;
-      color: var(--neon-g);
-      cursor: pointer;
-      transition: all 0.2s;
-      background: transparent;
-    }
-    .suggestion:hover { background: rgba(0,255,136,0.1); }
-
-    .nova-input-area {
-      padding: 14px 16px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .nova-input {
-      flex: 1;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 10px 14px;
-      color: #fff;
-      font-family: 'Raleway', sans-serif;
-      font-size: 0.85rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .nova-input:focus { border-color: rgba(0,255,136,0.3); }
-    .nova-input::placeholder { color: rgba(255,255,255,0.25); }
-    .nova-send {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      background: rgba(0,255,136,0.15);
-      border: 1px solid rgba(0,255,136,0.3);
-      color: var(--neon-g);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-    .nova-send:hover { background: rgba(0,255,136,0.25); }
-
-    /* ─── TYPING INDICATOR ───────────────────────────────────── */
-    .typing { display: flex; gap: 5px; align-items: center; padding: 10px 14px; }
-    .typing span {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--neon-g);
-      animation: blink 1.2s infinite;
-    }
-    .typing span:nth-child(2) { animation-delay: 0.2s; }
-    .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1)} }
-
-    /* ─── RAIN ANIMATION ────────────────────────────────────── */
-    .rain-drop {
-      position: absolute;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(100,180,255,0.6));
-      animation: fall linear infinite;
-      pointer-events: none;
-    }
-    @keyframes fall { from{transform:translateY(-100%)} to{transform:translateY(120%)} }
-
-    /* ─── STATIC VISUAL: SPHERE LINES ───────────────────────── */
-    .sphere-lines {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .sphere-line {
-      position: absolute;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(245,200,66,0.3), transparent);
-      animation: sweep linear infinite;
-    }
-    @keyframes sweep { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
-
-    /* ─── DECORATIVE ORBS ────────────────────────────────────── */
-    .deco-orb {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: blur(80px);
-      opacity: 0.12;
-    }
-
-    /* ─── RESPONSIVE ────────────────────────────────────────── */
-    @media (max-width: 768px) {
-      nav { padding: 14px 20px; }
-      .nav-links { display: none; }
-      section { padding: 60px 20px; }
-      .esfera-grid, .art-grid, .music-grid, .specs-grid, .tech-grid { grid-template-columns: 1fr; }
-      .tech-grid { grid-template-columns: 1fr 1fr; }
-      .tl-item, .tl-item:nth-child(even) { flex-direction: column; }
-      .timeline-items::before { left: 16px; }
-      .tl-dot { width: 32px; }
-      #nova-panel { width: calc(100vw - 40px); right: 20px; }
-      .hero-stats { gap: 12px; }
-      .hero-stat { min-width: 80px; padding: 12px 16px; }
-      .music-tabs { flex-direction: column; align-items: center; }
-    }
-
-    /* ─── GLITCH EFFECT FOR U2 ─────────────────────────────── */
-    @keyframes glitch {
-      0%,90%,100%{transform:none;filter:none}
-      92%{transform:skewX(-5deg);filter:drop-shadow(3px 0 0 rgba(255,0,0,0.6)) drop-shadow(-3px 0 0 rgba(0,0,255,0.6))}
-      96%{transform:skewX(3deg);filter:drop-shadow(-2px 0 0 rgba(255,0,0,0.6))}
-    }
-    .u2-title { animation: glitch 6s infinite; }
-
-    /* ─── PULSE SCAN LINE ────────────────────────────────────── */
-    @keyframes scan {
-      0%{top:0%} 100%{top:100%}
-    }
-    .scan-line {
-      position: absolute;
-      left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
-      animation: scan 3s linear infinite;
-      pointer-events: none;
-    }
+    @media(max-width:700px) { .cards { flex-direction:column; } #nova-panel { width:calc(100vw - 32px); right:16px; } .page { padding:30px 16px 50px; } }
   </style>
 </head>
 <body>
+<canvas id="stars"></canvas>
+<div class="page">
+  <canvas id="sphere-canvas" width="260" height="260"></canvas>
+  <h1 class="hero-title">THE SPHERE</h1>
+  <p class="hero-sub">Las Vegas · Experiencia Inmersiva</p>
 
-<!-- STARS CANVAS -->
-<canvas id="stars-canvas"></canvas>
-
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- ENTRY OVERLAY                                          -->
-<!-- ═══════════════════════════════════════════════════════ -->
-<div id="entry">
-  <canvas id="sphere-canvas" width="320" height="320"></canvas>
-  <h1 class="entry-title">THE SPHERE</h1>
-  <p class="entry-sub">Las Vegas · Una experiencia inmersiva</p>
-
-  <div id="nova-entry">
-    <div class="nova-header">
+  <div class="nova-bubble">
+    <div class="nova-row">
       <div class="nova-orb"></div>
-      <div>
-        <div class="nova-name">NOVA</div>
-        <div class="nova-title-text">Guía holográfica · The Sphere</div>
-      </div>
+      <div><div class="nova-label">NOVA · Guía Holográfica</div></div>
     </div>
-    <p class="nova-message">
-      ¡Bienvenido! Soy <span>NOVA</span>, tu guía en esta experiencia inmersiva.<br/>
-      La Sphere es mucho más que una arena: es donde la ciencia y el arte se fusionan
-      para crear algo completamente nuevo.<br/><br/>
-      ¿Por dónde quieres comenzar tu exploración?
+    <p class="nova-msg" id="nova-msg">
+      ¡Bienvenido! Soy <strong>NOVA</strong>, tu guía en esta experiencia. La Sphere es donde
+      la ingeniería y el arte se fusionan para crear algo sin precedentes.<br/><br/>
+      <strong>¿Por dónde quieres comenzar?</strong>
     </p>
-    <div class="entry-options">
-      <button class="entry-btn btn-esfera" onclick="enterSection('esfera')">
-        ◉ La Esfera
-      </button>
-      <button class="entry-btn btn-arte" onclick="enterSection('arte')">
-        ✦ Arte Inmersivo
-      </button>
-      <button class="entry-btn btn-musica" onclick="enterSection('musica')">
-        ♫ Música
-      </button>
-    </div>
   </div>
-  <button class="skip-btn" onclick="enterSection(null)">Explorar libremente →</button>
+
+  <div class="cards">
+    <a class="card c-esfera" href="esfera.html">
+      <div class="card-num">01 ·</div>
+      <div class="card-visual"><div class="sph-mini"></div></div>
+      <h2 class="card-title">La Esfera</h2>
+      <p class="card-desc">Arquitectura e ingeniería de vanguardia. La arena más grande e inmersiva del mundo.</p>
+      <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
+    </a>
+    <a class="card c-arte" href="arte.html">
+      <div class="card-num">02 ·</div>
+      <div class="card-visual"><div class="rain-mini" id="rain-mini"></div></div>
+      <h2 class="card-title">Arte Inmersivo</h2>
+      <p class="card-desc">Rain Room y Postcard from Earth. Obras donde la ciencia se convierte en arte.</p>
+      <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
+    </a>
+    <a class="card c-musica" href="musica.html">
+      <div class="card-num">03 ·</div>
+      <div class="card-visual"><div class="wave-mini" id="wave-mini"></div></div>
+      <h2 class="card-title">Música</h2>
+      <p class="card-desc">U2 y Backstreet Boys. Cuando el concierto se convierte en experiencia perceptual total.</p>
+      <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
+    </a>
+  </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- NAV                                                    -->
-<!-- ═══════════════════════════════════════════════════════ -->
-<nav>
-  <a class="nav-logo" href="#hero">THE SPHERE</a>
-  <ul class="nav-links">
-    <li><a href="#esfera" class="sec-esfera">La Esfera</a></li>
-    <li><a href="#arte" class="sec-arte">Arte Inmersivo</a></li>
-    <li><a href="#musica" class="sec-musica">Música</a></li>
-  </ul>
-  <button class="nav-nova-btn" onclick="toggleNova()">
-    <span class="nav-nova-orb"></span>
-    NOVA
-  </button>
-</nav>
-
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- MAIN                                                   -->
-<!-- ═══════════════════════════════════════════════════════ -->
-<main>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="deco-orb" style="width:500px;height:500px;background:var(--gold);top:10%;left:20%;"></div>
-    <div class="deco-orb" style="width:300px;height:300px;background:var(--cyan);top:40%;right:10%;"></div>
-    <div class="hero-content">
-      <div class="hero-label">MSG Entertainment · Las Vegas, Nevada</div>
-      <h1 class="hero-title">
-        <span class="line1">THE SPHERE</span>
-        <span class="line2">DONDE EL ARTE Y LA CIENCIA CONVERGEN</span>
-      </h1>
-      <p class="hero-desc">
-        La arena más grande e inmersiva del mundo. Un experimento radical que redefine
-        la relación entre tecnología, arte y experiencia humana.
-      </p>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-num">112<span style="font-size:0.6em">m</span></span>
-          <span class="hero-stat-label">Altura</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num">16K</span>
-          <span class="hero-stat-label">Resolución</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num">250M+</span>
-          <span class="hero-stat-label">Píxeles</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hero-stat-num">2023</span>
-          <span class="hero-stat-label">Inauguración</span>
-        </div>
-      </div>
-    </div>
-    <div class="scroll-hint">
-      <span>Desplázate</span>
-      <div class="scroll-arrow"></div>
-    </div>
-  </section>
-
-  <!-- ─── SECTION 1: LA ESFERA ──────────────────────────── -->
-  <section id="esfera">
-    <div class="deco-orb" style="width:600px;height:600px;background:var(--gold);top:-10%;right:-15%;"></div>
-
-    <div class="reveal" style="max-width:900px;margin:0 auto 60px;">
-      <span class="section-label">01 · La Estructura</span>
-      <h2 class="section-title">La Esfera de Las Vegas</h2>
-      <p class="section-desc">
-        Inaugurada en septiembre de 2023, la MSG Sphere es la arena de entretenimiento
-        más grande del mundo. Con un costo de aproximadamente 2.3 mil millones de dólares,
-        representa la convergencia definitiva entre ingeniería de vanguardia y visión artística.
-      </p>
-    </div>
-
-    <div class="esfera-grid reveal" style="max-width:1100px;margin:0 auto;">
-      <div class="esfera-text">
-        <p class="esfera-p">
-          <strong>La Sphere no es simplemente un venue de entretenimiento.</strong> Es un
-          experimento arquitectónico y tecnológico sin precedentes, diseñado desde cero
-          para crear experiencias que no son posibles en ningún otro lugar del mundo.
-        </p>
-        <p class="esfera-p">
-          Con <strong>112 metros de altura</strong> y <strong>157 metros de diámetro</strong>,
-          su forma esférica no es arbitraria: maximiza la superficie de pantalla visible
-          desde cualquier punto del interior, eliminando el concepto tradicional de
-          "mala butaca".
-        </p>
-        <p class="esfera-p">
-          El proyecto fue desarrollado por <strong>MSG Entertainment</strong> y diseñado
-          por el estudio de arquitectura <strong>Populous</strong>. Tres de cada cuatro
-          ingenieros del equipo reconocen que la Sphere representa exactamente eso:
-          que ni la ingeniería ni el arte pueden existir aquí de forma independiente.
-        </p>
-        <p class="esfera-p">
-          La ciencia se manifiesta a través de la infraestructura tecnológica — pantallas
-          de alta resolución, sistemas de sonido envolvente, gestión de datos — mientras
-          que el arte provee el contenido visual, sonoro y conceptual. <strong>Ninguna
-          disciplina podría lograrlo sola.</strong>
-        </p>
-      </div>
-      <div class="specs-grid">
-        <div class="spec-card reveal">
-          <div class="spec-icon">◉</div>
-          <div class="spec-num">16K<span class="spec-unit">×16K</span></div>
-          <div class="spec-label">Resolución de pantalla interior</div>
-        </div>
-        <div class="spec-card reveal">
-          <div class="spec-icon">▣</div>
-          <div class="spec-num">15,000<span class="spec-unit">m²</span></div>
-          <div class="spec-label">Superficie de pantalla LED</div>
-        </div>
-        <div class="spec-card reveal">
-          <div class="spec-icon">⬡</div>
-          <div class="spec-num">250M+</div>
-          <div class="spec-label">Píxeles totales</div>
-        </div>
-        <div class="spec-card reveal">
-          <div class="spec-icon">◎</div>
-          <div class="spec-num">157<span class="spec-unit">m</span></div>
-          <div class="spec-label">Diámetro de la estructura</div>
-        </div>
-        <div class="spec-card reveal">
-          <div class="spec-icon">♪</div>
-          <div class="spec-num">3D</div>
-          <div class="spec-label">Sistema de audio surround espacial</div>
-        </div>
-        <div class="spec-card reveal">
-          <div class="spec-icon">◈</div>
-          <div class="spec-num">4D</div>
-          <div class="spec-label">Efectos hápticos, viento y vibración</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TIMELINE -->
-    <div class="timeline reveal">
-      <div class="timeline-title">◈ Cronología de la Sphere ◈</div>
-      <div class="timeline-items">
-        <div class="tl-item">
-          <div class="tl-content">
-            <div class="tl-year">2018</div>
-            <div class="tl-event">MSG Entertainment anuncia el proyecto de la Sphere. Inicio de diseño arquitectónico con Populous.</div>
-          </div>
-          <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-          <div class="tl-content" style="background:transparent;border-color:transparent;"></div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-content" style="background:transparent;border-color:transparent;"></div>
-          <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-          <div class="tl-content">
-            <div class="tl-year">2021</div>
-            <div class="tl-event">Inicio de construcción en Las Vegas. Presupuesto estimado: $1.66 mil millones.</div>
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-content">
-            <div class="tl-year">2023</div>
-            <div class="tl-event">Inauguración oficial con U2 — <em>UV Achtung Baby Live</em>. Costo final: ~$2.3 mil millones.</div>
-          </div>
-          <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-          <div class="tl-content" style="background:transparent;border-color:transparent;"></div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-content" style="background:transparent;border-color:transparent;"></div>
-          <div class="tl-dot"><div class="tl-dot-inner"></div></div>
-          <div class="tl-content">
-            <div class="tl-year">2023–2024</div>
-            <div class="tl-event">Estreno de <em>Postcard from Earth</em> de Darren Aronofsky. Presentaciones de Backstreet Boys y otros artistas.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TECH GRID -->
-    <div class="tech-grid reveal">
-      <div class="tech-card">
-        <div class="tech-icon">🖥</div>
-        <div class="tech-name">Pantalla LED 16K</div>
-        <div class="tech-desc">La mayor pantalla LED del mundo. Tecnología de saturación de color más amplia que cualquier pantalla tradicional, produciendo colores más puros y profundos.</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-icon">🔊</div>
-        <div class="tech-name">Audio 3D Espacial</div>
-        <div class="tech-desc">El sistema emite sonido desde múltiples direcciones simultáneamente. Los sonidos no se "escuchan" — parecen atravesar el espacio físico sincronizados con las imágenes.</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-icon">⚡</div>
-        <div class="tech-name">Efectos 4D</div>
-        <div class="tech-desc">Asientos con retroalimentación háptica, sistemas de viento, vibraciones sísmicas. La experiencia se extiende del campo visual al cuerpo completo del espectador.</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-icon">◉</div>
-        <div class="tech-name">AR / VR Integration</div>
-        <div class="tech-desc">Realidad aumentada y virtual integradas al venue. Los espectadores no solo observan — experimentan realidades completamente nuevas.</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-icon">🛰</div>
-        <div class="tech-name">Tracking en Tiempo Real</div>
-        <div class="tech-desc">Cámaras 3D y sistemas de procesamiento rastrean posiciones en tiempo real, permitiendo experiencias que responden a los movimientos de los visitantes.</div>
-      </div>
-      <div class="tech-card">
-        <div class="tech-icon">🌐</div>
-        <div class="tech-name">Exterior LED</div>
-        <div class="tech-desc">El exterior también cuenta con paneles LED, convirtiendo la estructura en un hito visual del skyline de Las Vegas incluso antes de entrar.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── SECTION 2: ARTE INMERSIVO ───────────────────────── -->
-  <section id="arte">
-    <div class="deco-orb" style="width:500px;height:500px;background:var(--cyan);top:5%;left:-10%;"></div>
-    <div class="deco-orb" style="width:400px;height:400px;background:var(--purple);bottom:10%;right:-8%;"></div>
-
-    <div class="reveal" style="max-width:900px;margin:0 auto 40px;">
-      <span class="section-label">02 · Arte Inmersivo</span>
-      <h2 class="section-title">Experiencias que trascienden<br/>lo visual</h2>
-      <p class="section-desc">
-        La Sphere ha sido escenario de obras donde la tecnología no apoya al arte
-        desde afuera — <em>se convierte</em> en el arte mismo. Dos instalaciones
-        definen esta convergencia.
-      </p>
-    </div>
-
-    <div class="arte-divider reveal">
-      <button class="arte-tab active-rain" id="tab-rain" onclick="switchArte('rain')">
-        ◐ Rain Room
-      </button>
-      <button class="arte-tab" id="tab-postcard" onclick="switchArte('postcard')">
-        ◎ Postcard from Earth
-      </button>
-    </div>
-
-    <!-- RAIN ROOM PANEL -->
-    <div class="arte-panel visible" id="panel-rain">
-      <div class="rain-hero reveal">
-        <div class="rain-bg"></div>
-        <div class="rain-drops-container" id="rain-drops"></div>
-        <div class="scan-line"></div>
-        <div class="rain-info">
-          <div class="rain-title">Rain Room</div>
-          <div class="rain-artist">Random International · 2012 · Londres</div>
-        </div>
-      </div>
-
-      <div class="art-grid reveal">
-        <div class="rain-text">
-          <div class="art-block-title">La Obra</div>
-          <p class="art-p">
-            <strong>Entras a un espacio donde llueve constantemente. No te mojas.</strong>
-            Esa contradicción es el corazón de Rain Room.
-          </p>
-          <p class="art-p">
-            El colectivo londinense <strong>Random International</strong>, fundado en 2005
-            por Hannes Koch y Florian Ortkrass, creó esta instalación en 2012. Ha sido
-            exhibida en el Barbican (Londres), MoMA (Nueva York), LACMA (Los Ángeles),
-            Shanghái y Riad.
-          </p>
-          <div class="quote-block quote-rain">
-            "La lluvia tecnológicamente controlada permite experimentar directamente
-            la interferencia humana en los entornos. Se crea una distancia sensorial
-            que habilita la reflexión."
-          </div>
-          <p class="art-p">
-            Cámaras de seguimiento tridimensional identifican la posición exacta de
-            cada visitante. El software detiene el flujo de agua en un radio de
-            <strong>1.80 metros</strong> alrededor de cada persona. Aproximadamente
-            <strong>2,500 litros de agua reciclada</strong> circulan continuamente.
-          </p>
-          <div class="sensory-pills">
-            <span class="pill pill-cyan">Visual: negro, gris, blanco</span>
-            <span class="pill pill-cyan">Sonido: lluvia envolvente</span>
-            <span class="pill pill-cyan">Olfato: humedad artificial</span>
-            <span class="pill pill-gray">Táctil: ausente (el punto)</span>
-          </div>
-        </div>
-        <div>
-          <div class="art-block-title rain-text">Análisis Sensorial</div>
-          <p class="art-p">
-            <strong>Paleta de colores deliberadamente limitada:</strong> negro, gris y blanco.
-            El espacio oscuro amplifica la visibilidad de las gotas iluminadas,
-            dirigiendo toda la atención al movimiento del agua. Psicológicamente, elimina
-            distracciones y amplifica la experiencia visual-emocional.
-          </p>
-          <p class="art-p">
-            <strong>Ritmo:</strong> La caída constante e ininterrumpida del agua genera
-            atención total. Solo la entrada del visitante interrumpe ese ritmo. Estudios
-            sobre sonido y movimiento repetitivos demuestran cambios de estado emocional —
-            conectando la física del agua con la psicología del espectador.
-          </p>
-          <p class="art-p">
-            <strong>Emociones contradictorias:</strong> asombro ante lo imposible (estar
-            bajo la lluvia sin mojarse), extrañeza, calma del sonido constante equilibrada
-            contra vulnerabilidad e incertidumbre.
-          </p>
-          <div class="quote-block quote-rain">
-            "La ciencia no apoya el arte externamente — la ciencia <em>se convierte</em>
-            en el arte. Los sistemas perfectamente diseñados hacen posible, única e
-            increíble esta obra."
-          </div>
-          <div class="data-card cyan">
-            <div class="data-item"><span class="data-key">Área de instalación</span><span class="data-val">~100 m²</span></div>
-            <div class="data-item"><span class="data-key">Zona seca por persona</span><span class="data-val">1.80 m radio</span></div>
-            <div class="data-item"><span class="data-key">Agua en circulación</span><span class="data-val">~2,500 litros</span></div>
-            <div class="data-item"><span class="data-key">Tecnología de detección</span><span class="data-val">Cámaras 3D + software</span></div>
-            <div class="data-item"><span class="data-key">Espacio de color</span><span class="data-val">Negro, gris, blanco</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- POSTCARD FROM EARTH PANEL -->
-    <div class="arte-panel" id="panel-postcard">
-      <div class="postcard-hero reveal">
-        <div class="planet-bg" id="planet-bg"></div>
-        <div class="postcard-info">
-          <div class="postcard-title">Postcard from Earth</div>
-          <div class="postcard-artist">Darren Aronofsky · 2023 · MSG Sphere, Las Vegas</div>
-        </div>
-      </div>
-
-      <div class="art-grid reveal">
-        <div class="postcard-text">
-          <div class="art-block-title">La Obra</div>
-          <p class="art-p">
-            <strong>Un viaje de 50 minutos a través de los paisajes del planeta.</strong>
-            Océanos, desiertos, selvas, ecosistemas — los espectadores no los observan,
-            los <em>habitan</em>.
-          </p>
-          <p class="art-p">
-            <strong>Darren Aronofsky</strong> (Requiem for a Dream, Black Swan, The Whale)
-            diseñó esta obra específicamente para la Sphere en 2023. Es el primer gran
-            director en crear contenido nativo para este formato. La narrativa: astronautas
-            que regresan a la Tierra para rememorar su grandeza.
-          </p>
-          <p class="art-p">
-            La pantalla de <strong>16K × 16K</strong> y más de <strong>15,000 m²</strong>
-            cubre completamente el campo visual. Los límites del cine tradicional
-            desaparecen — no hay marco, no hay pantalla: solo entorno.
-          </p>
-          <div class="quote-block quote-postcard">
-            "La escena está organizada para que el espectador no contemple — habite.
-            Paisajes como cañones y montañas ocupan todo el campo visual, creando
-            inmersión donde cada elemento dirige la atención y genera impacto."
-          </div>
-          <div class="sensory-pills">
-            <span class="pill pill-purple">Visual: 360° hiperreal</span>
-            <span class="pill pill-purple">Audio: 3D espacial</span>
-            <span class="pill pill-purple">Táctil: asientos hápticos</span>
-            <span class="pill pill-gray">Duración: ~50 min</span>
-          </div>
-        </div>
-        <div>
-          <div class="art-block-title postcard-text">Análisis Técnico-Artístico</div>
-          <p class="art-p">
-            <strong>Composición:</strong> Abre con ciencia ficción que guía la narrativa.
-            Ocasionales voice-overs evitan sobrecargar lo visual, permitiendo que la
-            imagen de la Tierra como "sinfonía magnífica congelada en el tiempo" ocupe
-            el centro.
-          </p>
-          <p class="art-p">
-            <strong>Escala:</strong> Las dimensiones monumentales intensifican la
-            experiencia. Los efectos 4D —vibraciones en los asientos, viento— expanden
-            la escala más allá de lo visual hacia lo corporal.
-          </p>
-          <p class="art-p">
-            <strong>Movimiento:</strong> Transiciones fluidas y desplazamientos de cámara
-            refuerzan la sensación de viaje. Paneos amplios, barridos horizontales,
-            zoom-ins progresivos. Sin cortes abruptos — continuidad visual total.
-          </p>
-          <div class="data-card purple">
-            <div class="data-item"><span class="data-key">Resolución</span><span class="data-val">16K × 16K</span></div>
-            <div class="data-item"><span class="data-key">Píxeles totales</span><span class="data-val">>250 millones</span></div>
-            <div class="data-item"><span class="data-key">Superficie</span><span class="data-val">>15,000 m²</span></div>
-            <div class="data-item"><span class="data-key">Efectos físicos</span><span class="data-val">Háptico, viento, vibración</span></div>
-            <div class="data-item"><span class="data-key">Duración</span><span class="data-val">~50 minutos</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── SECTION 3: MÚSICA ────────────────────────────────── -->
-  <section id="musica">
-    <div class="deco-orb" style="width:500px;height:500px;background:var(--red);top:0;right:-5%;"></div>
-
-    <div class="reveal" style="max-width:900px;margin:0 auto 40px;">
-      <span class="section-label">03 · Música Inmersiva</span>
-      <h2 class="section-title">Cuando el concierto se<br/>convierte en experiencia</h2>
-      <p class="section-desc">
-        La Sphere transforma los conciertos en entornos perceptuales totales. El escenario
-        ya no es un punto focal — es el ambiente completo. Dos artistas que representan
-        dos filosofías distintas de la música en el espacio.
-      </p>
-    </div>
-
-    <div class="music-tabs reveal">
-      <button class="music-tab active-u2" id="mtab-u2" onclick="switchMusic('u2')">
-        ⚡ U2 — Achtung Baby
-      </button>
-      <button class="music-tab" id="mtab-bsb" onclick="switchMusic('bsb')">
-        ✦ Backstreet Boys
-      </button>
-    </div>
-
-    <!-- U2 PANEL -->
-    <div class="music-panel visible" id="mpanel-u2">
-      <div class="music-hero reveal">
-        <div class="u2-bg">
-          <div class="sphere-lines">
-            <div class="sphere-line" style="top:30%;width:200%;animation-duration:4s;"></div>
-            <div class="sphere-line" style="top:60%;width:200%;animation-duration:6s;animation-delay:-2s;"></div>
-            <div class="sphere-line" style="top:80%;width:200%;animation-duration:5s;animation-delay:-1s;"></div>
-          </div>
-        </div>
-        <div class="music-hero-info">
-          <div class="u2-title">UV Achtung Baby Live</div>
-          <div class="music-subtitle">U2 · Inauguración de la Sphere · Septiembre 2023</div>
-        </div>
-      </div>
-
-      <div class="music-grid reveal">
-        <div class="u2-block">
-          <div class="art-block-title">La Experiencia</div>
-          <p class="art-p">
-            <strong>U2 no dio un concierto — construyó una máquina perceptual.</strong>
-            El Zoo TV Tour de principios de los 90s, reimaginado para el venue más
-            avanzado del mundo.
-          </p>
-          <p class="art-p">
-            Múltiples pantallas simultáneas proyectan noticieros, anuncios, símbolos
-            políticos y ruido visual. Iluminación de alta intensidad con contrastes
-            extremos crea inestabilidad atmosférica. Guitarras con delay, distorsión
-            controlada y capas de ambiente.
-          </p>
-          <div class="quote-u2">
-            "El escenario funciona como una máquina perceptual que reorganiza la atención
-            del espectador. La simultaneidad de estímulos visuales fuerza al cerebro a
-            fragmentar el foco, generando una sensación de hiperestimulación similar a
-            navegar los medios contemporáneos."
-          </div>
-          <p class="art-p">
-            <strong>Cámaras en vivo</strong> introducen reflexividad — los espectadores
-            se ven como imágenes, entrando al circuito mediático que la obra critica.
-            La audiencia no es espectadora: es parte del dispositivo.
-          </p>
-          <div class="sensory-pills">
-            <span class="pill" style="background:rgba(255,79,107,0.12);border-color:rgba(255,79,107,0.3);color:var(--red);">Euforia + Ansiedad</span>
-            <span class="pill" style="background:rgba(255,79,107,0.12);border-color:rgba(255,79,107,0.3);color:var(--red);">Atracción + Confusión</span>
-            <span class="pill pill-gray">Crítica mediática</span>
-          </div>
-        </div>
-        <div class="u2-block">
-          <div class="art-block-title">Ciencia de la Percepción</div>
-          <p class="art-p">
-            <strong>Achtung Baby aplica principios de percepción humana y procesamiento
-            cognitivo.</strong> Múltiples pantallas simultáneas, iluminación intensa y
-            estímulos sónicos repetitivos generan una saturación sensorial controlada.
-          </p>
-          <p class="art-p">
-            El análisis de la BBC indica que el Zoo TV Tour imitaba deliberadamente
-            el flujo caótico de los medios modernos. El ritmo repetitivo y las texturas
-            favorecen estados de atención sostenida, permitiendo procesar múltiples
-            estímulos simultáneamente.
-          </p>
-          <div class="art-block-title" style="margin-top:24px;">Intensidad Sensorial</div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Saturación Visual</span><span>97%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-red" data-width="97"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Intensidad Sonora</span><span>92%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-red" data-width="92"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Complejidad Narrativa</span><span>88%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-red" data-width="88"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Carga Emocional</span><span>95%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-red" data-width="95"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BSB PANEL -->
-    <div class="music-panel" id="mpanel-bsb">
-      <div class="music-hero reveal">
-        <div class="bsb-bg"></div>
-        <div class="music-hero-info">
-          <div class="bsb-title">The DNA World Tour</div>
-          <div class="music-subtitle">Backstreet Boys · MSG Sphere, Las Vegas</div>
-        </div>
-      </div>
-
-      <div class="music-grid reveal">
-        <div class="bsb-block">
-          <div class="art-block-title">La Experiencia</div>
-          <p class="art-p">
-            <strong>Si U2 abrumó los sentidos, los Backstreet Boys los guiaron.</strong>
-            Una filosofía radicalmente diferente de cómo usar el espacio de la Sphere.
-          </p>
-          <p class="art-p">
-            Basado en pop altamente producido que enfatiza armonías vocales limpias y
-            estructuras accesibles. Producción que prioriza claridad y perfección técnica,
-            característica del pop de los 90s. Coreografía sincronizada con narrativas
-            visuales coherentes.
-          </p>
-          <div class="quote-bsb">
-            "Su diseño sonoro fue dirigido hacia la conexión emocional directa y el
-            éxito comercial. The Guardian señala que este estilo visual-musical fue
-            diseñado para atraer y ser procesado fácilmente por audiencias masivas."
-          </div>
-          <p class="art-p">
-            La estética visual: colores brillantes pero organizados, ritmos pegadizos,
-            estructuras claras. El Guardian nota que su estilo visual-musical fue
-            diseñado para atraer y ser procesado fácilmente por audiencias masivas.
-          </p>
-          <div class="sensory-pills">
-            <span class="pill pill-purple">Memoria</span>
-            <span class="pill pill-purple">Anticipación</span>
-            <span class="pill pill-purple">Placer auditivo</span>
-            <span class="pill pill-gray">Familiaridad + Retención</span>
-          </div>
-        </div>
-        <div class="bsb-block">
-          <div class="art-block-title">Psicología Musical</div>
-          <p class="art-p">
-            <strong>Los Backstreet Boys conectan ciencia y arte a través de la psicología
-            musical y la cognición emocional.</strong>
-          </p>
-          <p class="art-p">
-            Sus canciones emplean estructuras predecibles, armonías vocales en capas y
-            ritmos consistentes que activan mecanismos cerebrales relacionados con la
-            memoria, la anticipación y el placer auditivo.
-          </p>
-          <p class="art-p">
-            La BBC señala que su éxito se basa en fórmulas musicales que el cerebro
-            procesa fácilmente, facilitando la familiaridad y la retención. El cerebro
-            no lucha por procesar — disfruta reconociendo.
-          </p>
-          <div class="art-block-title" style="margin-top:24px;">Intensidad Sensorial</div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Saturación Visual</span><span>62%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-purple" data-width="62"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Intensidad Sonora</span><span>75%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-purple" data-width="75"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Accesibilidad</span><span>96%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-purple" data-width="96"></div></div>
-          </div>
-          <div class="sensory-bar">
-            <div class="sensory-bar-label"><span>Conexión Emocional</span><span>90%</span></div>
-            <div class="sensory-bar-track"><div class="sensory-bar-fill fill-purple" data-width="90"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── SYNTHESIS ─────────────────────────────────────────── -->
-  <section id="synthesis">
-    <div class="synthesis-inner reveal">
-      <div class="section-label" style="color:var(--gold);text-align:center;display:block;margin-bottom:16px;">04 · Síntesis</div>
-      <h2 class="synthesis-title">Donde la Ciencia se Convierte en Arte</h2>
-      <p class="synthesis-text">
-        A través de las tres formas artísticas exploradas — arte inmersivo, fotografía
-        de ecosistemas y música en vivo — emerge un principio unificador: la ciencia no
-        apoya al arte desde afuera. La tecnología se convierte en el mecanismo creativo
-        fundamental.
-      </p>
-      <p class="synthesis-text">
-        La infraestructura avanzada de la Sphere — pantallas, audio, seguimiento,
-        procesamiento — no simplemente muestra o amplifica la visión artística; reconfigura
-        fundamentalmente cómo los humanos perciben, procesan y responden emocionalmente a
-        la experiencia artística.
-      </p>
-      <p class="synthesis-text">
-        La Sphere representa esta convergencia: la posibilidad ingenieril habilita la
-        imaginación artística; la intención artística requiere realización científica.
-        Ninguna disciplina domina. Ambas son esenciales.
-      </p>
-      <div class="team-box">
-        <div class="team-label">Proyecto académico · CBU Arte</div>
-        <div class="team-name">Código y Lienzo</div>
-        <div class="team-members">
-          <span class="team-member">Juanita Arango</span>
-          <span class="team-member">·</span>
-          <span class="team-member">Fabián Salcedo</span>
-          <span class="team-member">·</span>
-          <span class="team-member">Juan Panadero</span>
-          <span class="team-member">·</span>
-          <span class="team-member">David Ruiz</span>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  THE SPHERE · LAS VEGAS · Experiencia Inmersiva · Código y Lienzo
-</footer>
-
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- NOVA CHAT                                              -->
-<!-- ═══════════════════════════════════════════════════════ -->
 <div id="nova-fab" onclick="toggleNova()">
-  <span class="fab-orb"></span>
-  <span class="fab-text">PREGUNTARLE A NOVA</span>
+  <span class="forb"></span><span class="ftxt">ASK NOVA</span>
 </div>
-
 <div id="nova-panel" class="closed">
-  <div class="nova-panel-header">
-    <div class="nova-panel-orb"></div>
-    <div>
-      <div class="nova-panel-name">NOVA</div>
-      <div class="nova-panel-status">En línea · Guía holográfica</div>
-    </div>
-    <button class="nova-close" onclick="toggleNova()">✕</button>
+  <div class="ph">
+    <div class="p-orb"></div>
+    <div><div class="pn">NOVA</div><div class="ps">En línea · Guía holográfica</div></div>
+    <button class="pcl" onclick="toggleNova()">✕</button>
   </div>
-  <div class="nova-messages" id="nova-msgs"></div>
-  <div class="nova-input-area">
-    <input class="nova-input" id="nova-input" placeholder="Pregunta algo sobre la Sphere..." onkeydown="if(event.key==='Enter')sendMessage()" />
-    <button class="nova-send" onclick="sendMessage()">↑</button>
+  <div class="pmsgs" id="pmsgs"></div>
+  <div class="pinp">
+    <input class="pi" id="pi" placeholder="Pregunta sobre la Sphere..." onkeydown="if(event.key==='Enter')snd()" />
+    <button class="psnd" onclick="snd()">↑</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════ -->
-<!-- SCRIPTS                                               -->
-<!-- ═══════════════════════════════════════════════════════ -->
 <script>
-// ─── STARS CANVAS ──────────────────────────────────────────
-const starsCanvas = document.getElementById('stars-canvas');
-const sctx = starsCanvas.getContext('2d');
+// STARS
+const sc = document.getElementById('stars'), sctx = sc.getContext('2d');
 let stars = [];
+function rsz() { sc.width = innerWidth; sc.height = innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+for (let i = 0; i < 200; i++) stars.push({ x: Math.random(), y: Math.random(), r: Math.random()*1.4+.2, a: Math.random()*.6+.2, s: Math.random()*.0004+.0001 });
+(function ds() { sctx.clearRect(0,0,sc.width,sc.height); stars.forEach(s => { s.a += Math.sin(Date.now()*s.s)*.005; s.a=Math.max(.1,Math.min(.8,s.a)); sctx.beginPath(); sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2); sctx.fillStyle=`rgba(255,255,255,${s.a})`; sctx.fill(); }); requestAnimationFrame(ds); })();
 
-function resizeStars() {
-  starsCanvas.width = window.innerWidth;
-  starsCanvas.height = window.innerHeight;
+// SPHERE CANVAS
+const sph = document.getElementById('sphere-canvas'), ctx = sph.getContext('2d');
+let ps = []; for (let i=0;i<60;i++) ps.push({a:Math.random()*Math.PI*2,r:85+Math.random()*45,sp:(Math.random()-.5)*.01,sz:Math.random()*2+.5,al:Math.random()*.6+.2,tilt:Math.random()*Math.PI});
+function drw(t) {
+  ctx.clearRect(0,0,260,260);
+  const cx=130,cy=130,r=85;
+  let g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.7); g.addColorStop(0,'rgba(245,200,66,.14)'); g.addColorStop(.5,'rgba(245,200,66,.04)'); g.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(cx,cy,r*1.7,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+  let sg=ctx.createRadialGradient(cx-24,cy-24,5,cx,cy,r); sg.addColorStop(0,'#fff8e0'); sg.addColorStop(.3,'#f5c842'); sg.addColorStop(.7,'#c49a0a'); sg.addColorStop(1,'#3a2800');
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+  ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip(); ctx.strokeStyle='rgba(0,0,0,.12)'; ctx.lineWidth=.7;
+  for(let i=-r;i<r;i+=15){const y2=cy+i,hw=Math.sqrt(Math.max(0,r*r-i*i));ctx.beginPath();ctx.moveTo(cx-hw,y2);ctx.lineTo(cx+hw,y2);ctx.stroke();ctx.beginPath();ctx.moveTo(cx+i,cy-hw);ctx.lineTo(cx+i,cy+hw);ctx.stroke();}
+  ctx.restore();
+  let sp=ctx.createRadialGradient(cx-26,cy-26,2,cx-16,cy-16,34); sp.addColorStop(0,'rgba(255,255,255,.4)'); sp.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle=sp; ctx.fill();
+  for(let ring=0;ring<3;ring++){ctx.save();ctx.translate(cx,cy);ctx.rotate(t*(.3+ring*.15)+ring*1.2);ctx.scale(1,.28+ring*.05);ctx.beginPath();ctx.arc(0,0,r*(1.14+ring*.18),0,Math.PI*2);ctx.strokeStyle=`rgba(0,212,255,${.38-ring*.1})`;ctx.lineWidth=1.4;ctx.stroke();ctx.restore();}
+  ps.forEach(p=>{p.a+=p.sp;const px=cx+Math.cos(p.a)*p.r*Math.cos(p.tilt),py=cy+Math.sin(p.a)*p.r*.3;if(Math.abs(px-cx)<r*.88&&Math.abs(py-cy)<r*.88)return;ctx.beginPath();ctx.arc(px,py,p.sz,0,Math.PI*2);ctx.fillStyle=`rgba(245,200,66,${p.al})`;ctx.fill();});
+  requestAnimationFrame(t2=>drw(t2*.001));
 }
-resizeStars();
-window.addEventListener('resize', resizeStars);
+drw(0);
 
-for (let i = 0; i < 180; i++) {
-  stars.push({
-    x: Math.random(),
-    y: Math.random(),
-    r: Math.random() * 1.2 + 0.2,
-    alpha: Math.random() * 0.6 + 0.2,
-    speed: Math.random() * 0.0003 + 0.0001
-  });
-}
+// RAIN MINI
+(()=>{ const c=document.getElementById('rain-mini'); if(!c)return; for(let i=0;i<14;i++){const d=document.createElement('div');d.className='rdrop';d.style.left=Math.random()*90+'%';d.style.height=(8+Math.random()*14)+'px';d.style.animationDuration=(.35+Math.random()*.5)+'s';d.style.animationDelay=(Math.random()*2)+'s';d.style.opacity=.4+Math.random()*.5;c.appendChild(d);} })();
 
-function drawStars() {
-  sctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
-  stars.forEach(s => {
-    s.alpha += Math.sin(Date.now() * s.speed) * 0.005;
-    s.alpha = Math.max(0.1, Math.min(0.8, s.alpha));
-    sctx.beginPath();
-    sctx.arc(s.x * starsCanvas.width, s.y * starsCanvas.height, s.r, 0, Math.PI * 2);
-    sctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
-    sctx.fill();
-  });
-  requestAnimationFrame(drawStars);
-}
-drawStars();
+// WAVE MINI
+(()=>{ const w=document.getElementById('wave-mini'); if(!w)return; for(let i=0;i<14;i++){const b=document.createElement('div');b.className='wbar';b.style.height='60px';b.style.background=`rgba(155,89,245,${.35+Math.random()*.45})`;b.style.animationDuration=(.45+Math.random()*.8)+'s';b.style.animationDelay=(i*.07)+'s';w.appendChild(b);} })();
 
-// ─── SPHERE ENTRY CANVAS ─────────────────────────────────
-const sc = document.getElementById('sphere-canvas');
-const cx2 = sc.getContext('2d');
-let particles = [];
-for (let i = 0; i < 60; i++) {
-  particles.push({
-    angle: Math.random() * Math.PI * 2,
-    radius: 100 + Math.random() * 60,
-    speed: (Math.random() - 0.5) * 0.008,
-    size: Math.random() * 2 + 0.5,
-    alpha: Math.random() * 0.6 + 0.2,
-    tilt: Math.random() * Math.PI
-  });
-}
-
-function drawEntrySphere(t) {
-  cx2.clearRect(0, 0, 320, 320);
-  const cx = 160, cy = 160, r = 90;
-
-  // Outer glow
-  const outerG = cx2.createRadialGradient(cx, cy, 0, cx, cy, r * 1.8);
-  outerG.addColorStop(0, 'rgba(245,200,66,0.15)');
-  outerG.addColorStop(0.5, 'rgba(245,200,66,0.05)');
-  outerG.addColorStop(1, 'transparent');
-  cx2.beginPath();
-  cx2.arc(cx, cy, r * 1.8, 0, Math.PI * 2);
-  cx2.fillStyle = outerG;
-  cx2.fill();
-
-  // Sphere gradient
-  const sG = cx2.createRadialGradient(cx - 28, cy - 28, 8, cx, cy, r);
-  sG.addColorStop(0, '#fff8e0');
-  sG.addColorStop(0.3, '#f5c842');
-  sG.addColorStop(0.7, '#c49a0a');
-  sG.addColorStop(1, '#3a2800');
-  cx2.beginPath();
-  cx2.arc(cx, cy, r, 0, Math.PI * 2);
-  cx2.fillStyle = sG;
-  cx2.fill();
-
-  // Grid lines on sphere
-  cx2.save();
-  cx2.beginPath();
-  cx2.arc(cx, cy, r, 0, Math.PI * 2);
-  cx2.clip();
-  cx2.strokeStyle = 'rgba(0,0,0,0.15)';
-  cx2.lineWidth = 0.8;
-  for (let i = -r; i < r; i += 18) {
-    // Horizontal
-    const yPos = cy + i;
-    const halfW = Math.sqrt(Math.max(0, r * r - i * i));
-    cx2.beginPath();
-    cx2.moveTo(cx - halfW, yPos);
-    cx2.lineTo(cx + halfW, yPos);
-    cx2.stroke();
-    // Vertical
-    cx2.beginPath();
-    cx2.moveTo(cx + i, cy - halfW);
-    cx2.lineTo(cx + i, cy + halfW);
-    cx2.stroke();
-  }
-  cx2.restore();
-
-  // Specular highlight
-  const specG = cx2.createRadialGradient(cx - 30, cy - 30, 2, cx - 20, cy - 20, 40);
-  specG.addColorStop(0, 'rgba(255,255,255,0.4)');
-  specG.addColorStop(1, 'transparent');
-  cx2.beginPath();
-  cx2.arc(cx, cy, r, 0, Math.PI * 2);
-  cx2.fillStyle = specG;
-  cx2.fill();
-
-  // Orbiting rings
-  for (let ring = 0; ring < 3; ring++) {
-    cx2.save();
-    cx2.translate(cx, cy);
-    const angle = t * (0.3 + ring * 0.15) + ring * 1.2;
-    cx2.rotate(angle);
-    cx2.scale(1, 0.28 + ring * 0.05);
-    cx2.beginPath();
-    cx2.arc(0, 0, r * (1.15 + ring * 0.18), 0, Math.PI * 2);
-    cx2.strokeStyle = `rgba(0,212,255,${0.4 - ring * 0.1})`;
-    cx2.lineWidth = 1.5;
-    cx2.stroke();
-    cx2.restore();
-  }
-
-  // Orbiting particles
-  particles.forEach(p => {
-    p.angle += p.speed;
-    const px = cx + Math.cos(p.angle) * p.radius * Math.cos(p.tilt);
-    const py = cy + Math.sin(p.angle) * p.radius * 0.3;
-    if (Math.abs(px - cx) < r * 0.95 && Math.abs(py - cy) < r * 0.95) return;
-    cx2.beginPath();
-    cx2.arc(px, py, p.size, 0, Math.PI * 2);
-    cx2.fillStyle = `rgba(245,200,66,${p.alpha})`;
-    cx2.fill();
-  });
-
-  requestAnimationFrame(t2 => drawEntrySphere(t2 * 0.001));
-}
-drawEntrySphere(0);
-
-// ─── RAIN DROPS ──────────────────────────────────────────
-function createRainDrops() {
-  const container = document.getElementById('rain-drops');
-  if (!container) return;
-  container.innerHTML = '';
-  for (let i = 0; i < 80; i++) {
-    const drop = document.createElement('div');
-    drop.className = 'rain-drop';
-    drop.style.left = Math.random() * 100 + '%';
-    drop.style.height = (Math.random() * 30 + 10) + 'px';
-    drop.style.animationDuration = (Math.random() * 0.6 + 0.4) + 's';
-    drop.style.animationDelay = (Math.random() * 2) + 's';
-    drop.style.opacity = Math.random() * 0.6 + 0.2;
-    container.appendChild(drop);
-  }
-}
-createRainDrops();
-
-// ─── PLANET BACKGROUND ───────────────────────────────────
-function createPlanetBg() {
-  const bg = document.getElementById('planet-bg');
-  if (!bg) return;
-  const canvas = document.createElement('canvas');
-  canvas.width = bg.offsetWidth || 900;
-  canvas.height = 340;
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.style.position = 'absolute';
-  bg.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-
-  const orbs = [
-    { x: 0.15, y: 0.4, r: 120, c: '#1a0535', a: 0.9 },
-    { x: 0.6, y: 0.3, r: 200, c: '#2a0a10', a: 0.7 },
-    { x: 0.85, y: 0.7, r: 100, c: '#0a1535', a: 0.6 },
-    { x: 0.4, y: 0.8, r: 160, c: '#0a0535', a: 0.5 },
-  ];
-  orbs.forEach(o => {
-    const g = ctx.createRadialGradient(o.x*canvas.width, o.y*canvas.height, 0, o.x*canvas.width, o.y*canvas.height, o.r);
-    g.addColorStop(0, o.c);
-    g.addColorStop(1, 'transparent');
-    ctx.beginPath();
-    ctx.arc(o.x*canvas.width, o.y*canvas.height, o.r, 0, Math.PI*2);
-    ctx.fillStyle = g;
-    ctx.globalAlpha = o.a;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  });
-  // Stars
-  for (let i = 0; i < 120; i++) {
-    ctx.beginPath();
-    ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*1.5, 0, Math.PI*2);
-    ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.6+0.1})`;
-    ctx.fill();
-  }
-}
-setTimeout(createPlanetBg, 100);
-
-// ─── ENTRY FLOW ──────────────────────────────────────────
-function enterSection(section) {
-  document.getElementById('entry').classList.add('hidden');
-  if (section) {
-    setTimeout(() => {
-      document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
-    }, 500);
-  }
-  // Open NOVA after entry
-  setTimeout(() => {
-    if (!novaOpen) toggleNova();
-    addMessage('nova', `¡Perfecto! Puedes explorar la Sphere a tu ritmo. Si tienes preguntas, aquí estaré. 😊`);
-  }, 1200);
-}
-
-// ─── ARTE TABS ───────────────────────────────────────────
-function switchArte(which) {
-  document.querySelectorAll('.arte-panel').forEach(p => p.classList.remove('visible'));
-  document.querySelectorAll('.arte-tab').forEach(t => { t.classList.remove('active-rain','active-postcard'); });
-  document.getElementById('panel-' + which).classList.add('visible');
-  if (which === 'rain') {
-    document.getElementById('tab-rain').classList.add('active-rain');
-  } else {
-    document.getElementById('tab-postcard').classList.add('active-postcard');
-  }
-  setTimeout(animateBars, 200);
-}
-
-// ─── MUSIC TABS ──────────────────────────────────────────
-function switchMusic(which) {
-  document.querySelectorAll('.music-panel').forEach(p => p.classList.remove('visible'));
-  document.querySelectorAll('.music-tab').forEach(t => { t.classList.remove('active-u2','active-bsb'); });
-  document.getElementById('mpanel-' + which).classList.add('visible');
-  document.getElementById('mtab-' + which).classList.add('active-' + which);
-  setTimeout(animateBars, 200);
-}
-
-// ─── BARS ANIMATION ──────────────────────────────────────
-function animateBars() {
-  document.querySelectorAll('.sensory-bar-fill').forEach(bar => {
-    const target = bar.dataset.width;
-    bar.style.width = target + '%';
-  });
-}
-
-// ─── SCROLL REVEAL ───────────────────────────────────────
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      if (e.target.querySelector('.sensory-bar-fill')) {
-        setTimeout(animateBars, 300);
-      }
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// ─── NOVA CHATBOT ─────────────────────────────────────────
-let novaOpen = false;
-let novaGreeted = false;
-
-const kb = {
-  esfera: "La Sphere de Las Vegas es un venue inmersivo inaugurado en septiembre de 2023. Con 112 metros de altura y 157 metros de diámetro, costó aproximadamente 2.3 mil millones de dólares. Es la arena de entretenimiento más grande e inmersiva del mundo, creada por MSG Entertainment.",
-  pantalla: "La pantalla LED interior de la Sphere tiene más de 15,000 m² de superficie con resolución 16K × 16K, superando los 250 millones de píxeles totales. Es la pantalla LED más grande del mundo. La tecnología LED logra una saturación de color más amplia que las pantallas tradicionales.",
-  tecnologia: "La Sphere usa tecnología de vanguardia: pantallas LED 16K, audio 3D surround que emite desde múltiples direcciones, efectos 4D con asientos hápticos, viento y vibraciones sísmicas. También integra AR y VR para que los espectadores no solo observen sino que habiten realidades nuevas.",
-  audio: "El sistema de audio 3D surround de la Sphere hace que los sonidos parezcan venir de múltiples direcciones al mismo tiempo. Los sonidos no se 'escuchan' desde un punto — parecen atravesar el espacio físico, perfectamente sincronizados con las imágenes proyectadas.",
-  'rain room': "Rain Room de Random International permite caminar bajo la lluvia sin mojarte. Cámaras 3D rastrean tu posición en tiempo real y detienen el agua en un radio de 1.80m a tu alrededor. Usa ~2,500 litros de agua reciclada. Paleta: negro, gris y blanco. Exhibida en MoMA, Barbican, LACMA.",
-  'random international': "Random International es un colectivo de arte con sede en Londres, fundado en 2005 por Hannes Koch y Florian Ortkrass. Sus obras se han exhibido en el Barbican, MoMA, LACMA, Shanghái y Riad. Sus trabajos integran tecnología avanzada como componente fundamental de la experiencia.",
-  'postcard': "Postcard from Earth de Darren Aronofsky es un viaje inmersivo de ~50 minutos a través de paisajes planetarios. La pantalla 16K de 15,000 m² cubre el campo visual completo del espectador. Los efectos 4D incluyen asientos hápticos, viento y vibración. El tema: la grandeza de la Tierra narrada por astronautas que regresan.",
-  'aronofsky': "Darren Aronofsky (1969) es un director americano conocido por Requiem for a Dream (2000), Black Swan (2010) y The Whale (2022). Postcard from Earth fue diseñada específicamente para la Sphere en 2023 — su primera obra creada para este formato inmersivo.",
-  'u2': "U2 inauguró la Sphere con UV Achtung Baby Live en septiembre de 2023. Múltiples pantallas simultáneas, noticieros, anuncios y ruido visual crean saturación mediática intencional. No es un concierto convencional — el escenario funciona como una máquina perceptual que fragmenta la atención del espectador.",
-  'achtung baby': "Achtung Baby fue creado a principios de los 90s en Berlín post-muro. El Zoo TV Tour fue revolucionario: múltiples pantallas, transmisiones en vivo y saturación visual como crítica al exceso mediático. BBC lo describió como 'espectáculo que imita el caos de los medios modernos'.",
-  'backstreet': "Los Backstreet Boys llevaron su pop clásico a la Sphere. Armonías vocales limpias, estructuras predecibles y coreografía sincronizada. La BBC señala que su éxito se basa en fórmulas musicales que el cerebro procesa fácilmente, activando mecanismos de memoria, anticipación y placer auditivo.",
-  'arte': "La Sphere ha presentado arte inmersivo de alto nivel. Las obras más destacadas son Rain Room de Random International (donde caminas bajo la lluvia sin mojarte) y Postcard from Earth de Darren Aronofsky (un viaje cinematográfico de 50 minutos por el planeta). ¿Te cuento sobre alguna?",
-  'musica': "La Sphere fue inaugurada por U2 con UV Achtung Baby Live. También han actuado los Backstreet Boys. Cada artista usa el venue de forma diferente: U2 busca saturación sensorial crítica; los Backstreet Boys buscan conexión emocional directa y accesible.",
-  'colores': "Rain Room usa paleta minimalista: negro, gris y blanco. Esto elimina distracciones y amplifica la percepción visual. Postcard from Earth usa colores intensos y contrastantes que la tecnología 16K amplifica con mayor saturación que cualquier pantalla convencional.",
-  'costo': "La Sphere costó aproximadamente 2.3 mil millones de dólares en total. Fue construida entre 2021 y 2023 en Las Vegas, Nevada, por MSG Entertainment.",
-  'capacidad': "La Sphere tiene capacidad para aproximadamente 17,500 a 20,000 personas, dependiendo de la configuración del evento.",
-  '4d': "Los efectos 4D de la Sphere incluyen asientos con retroalimentación háptica (vibran según la acción), sistemas de viento sincronizados con las imágenes y vibraciones sísmicas. La experiencia se extiende del campo visual al cuerpo completo del espectador.",
-  'codigo y lienzo': "Código y Lienzo es el nombre del equipo detrás de este proyecto académico para el CBU de Arte. Integran Juanita Arango, Fabián Salcedo, Juan Panadero y David Ruiz. Tres de los cuatro miembros estudian ingeniería, lo que hace a la Sphere el caso perfecto para fusionar conocimiento científico y artístico.",
-  'default': "Puedo contarte sobre la Sphere y su tecnología, el arte inmersivo que se presenta allí (Rain Room, Postcard from Earth), o la música (U2, Backstreet Boys). ¿Qué te interesa explorar?"
+// NOVA
+const SUGS = ['¿Qué es la Sphere?','¿Qué arte se presenta allí?','¿Quiénes han actuado en la Sphere?','Rain Room y Postcard from Earth'];
+const KB = {
+  'que es la sphere':'La Sphere de Las Vegas es la arena de entretenimiento más grande e inmersiva del mundo. Inaugurada en septiembre de 2023, tiene 112 metros de altura, 157m de diámetro y costó ~2.3 mil millones de dólares.',
+  'sphere':'La MSG Sphere es un venue inmersivo inaugurado en septiembre de 2023 en Las Vegas. Con 112m de altura y una pantalla LED de 15,000 m² a 16K, es la arena tecnológicamente más avanzada del mundo.',
+  'esfera':'La Sphere tiene 112m de altura, 157m de diámetro y una pantalla LED 16K con más de 250 millones de píxeles. Fue inaugurada por U2 en septiembre de 2023.',
+  'construc':'La Sphere comenzó a construirse en 2021 y fue inaugurada en septiembre de 2023. Costó aproximadamente 2.3 mil millones de dólares.',
+  'costo':'La Sphere costó aproximadamente 2.3 mil millones de dólares. Fue construida entre 2021 y 2023 por MSG Entertainment.',
+  'arte':'En la Sphere se han presentado obras como Rain Room de Random International y Postcard from Earth de Darren Aronofsky. ¿Quieres saber más sobre alguna?',
+  'musica':'U2 inauguró la Sphere con UV Achtung Baby Live en 2023. Los Backstreet Boys también han actuado allí, con experiencias sensoriales muy diferentes.',
+  'u2':'U2 inauguró la Sphere en septiembre de 2023. Múltiples pantallas, ruido visual y crítica mediática convirtieron el concierto en una experiencia de saturación sensorial total.',
+  'backstreet':'Los Backstreet Boys llevaron su pop clásico a la Sphere con armonías vocales limpias y coreografías. Activaron mecanismos de memoria, anticipación y placer auditivo.',
+  'rain room':'Rain Room de Random International es una instalación donde caminas bajo la lluvia sin mojarte. Cámaras 3D detectan tu posición y detienen el agua en 1.80m de radio.',
+  'postcard':'Postcard from Earth de Darren Aronofsky es un viaje inmersivo de ~50 minutos por paisajes planetarios. La pantalla 16K te rodea completamente eliminando los límites del cine tradicional.',
+  'tecnolog':'La Sphere usa pantallas LED 16K, audio 3D surround, efectos 4D (háptico, viento, vibración), AR y VR. Su tecnología transforma cualquier experiencia.',
+  'audio':'El sistema 3D surround de la Sphere hace que el sonido parezca venir de múltiples direcciones simultáneamente, sincronizado perfectamente con las imágenes.',
+  'hola':'¡Hola! Soy NOVA. Puedo contarte sobre la Sphere, el arte inmersivo que se presenta allí (Rain Room, Postcard from Earth) o la música (U2, Backstreet Boys). ¿Qué te interesa?',
+  'gracias':'¡Con mucho gusto! Sigue explorando la Sphere — hay mucho por descubrir en cada sección.',
 };
 
-function getResponse(input) {
-  const q = input.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  for (const [key, val] of Object.entries(kb)) {
-    if (q.includes(key)) return val;
-  }
-  if (q.includes('altura') || q.includes('grande') || q.includes('tamano') || q.includes('dimensi')) return kb.esfera;
-  if (q.includes('pixel') || q.includes('resoluc') || q.includes('pantalla') || q.includes('led')) return kb.pantalla;
-  if (q.includes('lluvia') || q.includes('mojar') || q.includes('rain') || q.includes('agua')) return kb['rain room'];
-  if (q.includes('tierra') || q.includes('planet') || q.includes('darren') || q.includes('postal')) return kb['postcard'];
-  if (q.includes('sonido') || q.includes('audio') || q.includes('surround')) return kb.audio;
-  if (q.includes('dinero') || q.includes('precio') || q.includes('billion') || q.includes('millon')) return kb.costo;
-  if (q.includes('personas') || q.includes('gente') || q.includes('aforo') || q.includes('entra')) return kb.capacidad;
-  if (q.includes('vibr') || q.includes('haptic') || q.includes('viento') || q.includes('fisico')) return kb['4d'];
-  if (q.includes('hola') || q.includes('hi') || q.includes('buenas')) return '¡Hola! Soy NOVA, tu guía holográfica de la Sphere. Puedo contarte sobre la estructura, el arte inmersivo (Rain Room, Postcard from Earth) o la música (U2, Backstreet Boys). ¿Qué quieres explorar?';
-  if (q.includes('gracias') || q.includes('thanks')) return '¡Con gusto! Si tienes más preguntas, aquí estoy. La Sphere es un universo entero por explorar.';
-  return kb.default;
-}
+let open=false, init=false;
+function toggleNova(){open=!open;document.getElementById('nova-panel').classList.toggle('closed',!open);if(open&&!init){init=true;const from=sessionStorage.getItem('sphere-from');sessionStorage.removeItem('sphere-from');setTimeout(()=>{if(from){addM('n',`¡De vuelta! ¿Y ahora a dónde quieres ir? Quedan secciones por explorar.`);setTimeout(()=>addS(['La Esfera →','Arte Inmersivo →','Música →']),500);}else{addM('n','¡Hola! Soy NOVA. ¿Sobre qué quieres aprender primero?');setTimeout(()=>addS(SUGS),500);}},280);}}
+function nrm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'');}
+function getR(q){const nq=nrm(q);let best=null,bl=0;for(const[k,v]of Object.entries(KB)){const nk=nrm(k);if(nq.includes(nk)&&nk.length>bl){best=v;bl=nk.length;}}return best;}
+function addM(t,txt){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.className='m '+t;d.innerHTML=`<div class="mb">${txt}</div>`;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function addS(ss){const m=document.getElementById('pmsgs');const w=document.createElement('div');w.className='m n';const i=document.createElement('div');i.className='sugs';ss.forEach(s=>{const b=document.createElement('button');b.className='sg';b.textContent=s;b.onclick=()=>{w.remove();sw(s.replace(' →',''));};i.appendChild(b);});w.appendChild(i);m.appendChild(w);m.scrollTop=m.scrollHeight;}
+function showT(){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.id='typ';d.className='m n';d.innerHTML='<div class="typ-w"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function rmT(){const t=document.getElementById('typ');if(t)t.remove();}
+function sw(txt){addM('u',txt);showT();setTimeout(()=>{rmT();const r=getR(txt);if(r){addM('n',r);}else{addM('n','Eso aún no lo tengo en mis archivos 🤔 — pero puedes preguntarme algo así:');setTimeout(()=>addS(SUGS.slice(0,3)),300);}},620+Math.random()*380);}
+function snd(){const i=document.getElementById('pi');const t=i.value.trim();if(!t)return;i.value='';sw(t);}
 
-function toggleNova() {
-  novaOpen = !novaOpen;
-  document.getElementById('nova-panel').classList.toggle('closed', !novaOpen);
-  if (novaOpen && !novaGreeted) {
-    novaGreeted = true;
-    setTimeout(() => {
-      addMessage('nova', '¡Hola! Soy NOVA, tu guía holográfica en la Sphere. Puedo responderte preguntas sobre la estructura, el arte inmersivo o la música. ¿Qué quieres saber?');
-      setTimeout(() => addSuggestions(['¿Qué es la Sphere?', 'Cuéntame sobre Rain Room', 'U2 en la Sphere', 'Tecnología usada']), 600);
-    }, 300);
-  }
-}
-
-function addMessage(from, text) {
-  const msgs = document.getElementById('nova-msgs');
-  const msg = document.createElement('div');
-  msg.className = 'msg ' + from;
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.textContent = text;
-  msg.appendChild(bubble);
-  msgs.appendChild(msg);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function addSuggestions(suggestions) {
-  const msgs = document.getElementById('nova-msgs');
-  const div = document.createElement('div');
-  div.className = 'msg nova';
-  const inner = document.createElement('div');
-  inner.className = 'nova-suggestions';
-  suggestions.forEach(s => {
-    const btn = document.createElement('button');
-    btn.className = 'suggestion';
-    btn.textContent = s;
-    btn.onclick = () => { sendWith(s); inner.remove(); };
-    inner.appendChild(btn);
-  });
-  div.appendChild(inner);
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function showTyping() {
-  const msgs = document.getElementById('nova-msgs');
-  const t = document.createElement('div');
-  t.className = 'msg nova';
-  t.id = 'typing-indicator';
-  t.innerHTML = '<div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>';
-  msgs.appendChild(t);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function removeTyping() {
-  const t = document.getElementById('typing-indicator');
-  if (t) t.remove();
-}
-
-function sendWith(text) {
-  addMessage('user', text);
-  showTyping();
-  setTimeout(() => {
-    removeTyping();
-    const resp = getResponse(text);
-    addMessage('nova', resp);
-  }, 700 + Math.random() * 400);
-}
-
-function sendMessage() {
-  const input = document.getElementById('nova-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  sendWith(text);
-}
+// Returning user
+window.addEventListener('load',()=>{const from=sessionStorage.getItem('sphere-from');if(from){document.getElementById('nova-msg').innerHTML=`¡De vuelta en el inicio! ¿<strong>Y ahora a dónde quieres ir?</strong><br/><br/>Cada sección tiene su propia experiencia esperándote.`;setTimeout(()=>{toggleNova();},900);}});
 </script>
 </body>
 </html>

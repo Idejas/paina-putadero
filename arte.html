@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arte Inmersivo · The Sphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#04040f;--gold:#f5c842;--gold-dim:#c49a1a;--cyan:#00d4ff;--purple:#9b59f5;--neon-g:#00ff88;--red:#ff4f6b;--glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.08)}
+    html{scroll-behavior:smooth}body{background:var(--bg);color:#e0e0f0;font-family:'Raleway',sans-serif;overflow-x:hidden}
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#1a5a6a;border-radius:3px}
+    #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 36px;background:rgba(4,4,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb)}
+    .back-btn{display:flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.18em;color:rgba(255,255,255,.45);cursor:pointer;text-decoration:none;transition:color .3s}
+    .back-btn:hover{color:var(--cyan)}
+    .back-arr{transition:transform .3s}.back-btn:hover .back-arr{transform:translateX(-4px)}
+    .nav-title{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.2em;color:var(--cyan)}
+    .nav-nova{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(0,255,136,.28);border-radius:30px;background:rgba(0,255,136,.04);color:var(--neon-g);font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.14em;cursor:pointer;transition:all .3s}
+    .nav-nova:hover{background:rgba(0,255,136,.1)}
+    .nn-orb{width:7px;height:7px;border-radius:50%;background:var(--neon-g);animation:porb 1.5s infinite}
+    @keyframes porb{0%,100%{box-shadow:0 0 6px rgba(0,255,136,.6)}50%{box-shadow:0 0 14px rgba(0,255,136,1)}}
+
+    main{position:relative;z-index:1;padding-top:70px}
+    .deco{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);opacity:.1}
+
+    /* HERO */
+    .hero{min-height:70vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px 40px;background:linear-gradient(180deg,rgba(0,30,50,.5) 0%,var(--bg) 100%)}
+    .hero-inner{text-align:center;max-width:750px;position:relative;z-index:1}
+    .badge{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:16px;animation:fadeUp .7s ease .2s both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    .hero h1{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:18px;animation:fadeUp .7s ease .35s both}
+    .hero h1 span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{font-size:.97rem;line-height:1.82;color:rgba(255,255,255,.58);animation:fadeUp .7s ease .5s both}
+
+    /* TABS */
+    .tabs-wrap{display:flex;justify-content:center;padding:40px 40px 0}
+    .tabs{display:flex;border:1px solid var(--gb);border-radius:14px;overflow:hidden;max-width:500px;width:100%}
+    .tab{flex:1;padding:13px 18px;text-align:center;cursor:pointer;font-size:.8rem;font-weight:600;letter-spacing:.07em;color:rgba(255,255,255,.38);transition:all .3s;border:none;background:transparent;font-family:'Raleway',sans-serif}
+    .tab.a-rain{background:rgba(0,212,255,.1);color:var(--cyan)}
+    .tab.a-post{background:rgba(155,89,245,.1);color:var(--purple)}
+    .tab:not(.a-rain):not(.a-post):hover{color:rgba(255,255,255,.65)}
+
+    section{position:relative;z-index:1;padding:70px 40px}
+    .sec-wrap{max-width:1100px;margin:0 auto}
+    .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+    .rv.vis{opacity:1;transform:translateY(0)}
+
+    /* PANEL */
+    .panel{display:none;animation:fadeUp .5s ease}
+    .panel.visible{display:block}
+
+    /* RAIN ROOM */
+    .rain-hero{position:relative;border-radius:22px;overflow:hidden;min-height:320px;display:flex;align-items:flex-end;margin-bottom:40px}
+    .rain-bg{position:absolute;inset:0;background:linear-gradient(135deg,#010c18,#030f22,#020810)}
+    .rain-container{position:absolute;inset:0;overflow:hidden}
+    .rdrop{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(80,170,255,.65));animation:rfal linear infinite}
+    @keyframes rfal{from{transform:translateY(-20px);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(400px);opacity:0}}
+    .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);animation:scan 3s linear infinite;pointer-events:none}
+    @keyframes scan{0%{top:0}100%{top:100%}}
+    .rain-info{position:relative;z-index:2;padding:36px 40px;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 100%);width:100%}
+    .rain-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:var(--cyan);margin-bottom:6px}
+    .rain-artist{font-size:.72rem;color:rgba(255,255,255,.42);letter-spacing:.22em;text-transform:uppercase}
+
+    /* POSTCARD HERO */
+    .post-hero{position:relative;border-radius:22px;overflow:hidden;min-height:320px;display:flex;align-items:flex-end;margin-bottom:40px;background:linear-gradient(135deg,#08031a,#180530,#200810)}
+    .post-canvas-wrap{position:absolute;inset:0}
+    .post-info{position:relative;z-index:2;padding:36px 40px;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 100%);width:100%}
+    .post-title{font-family:'Orbitron',sans-serif;font-size:1.7rem;color:var(--purple);margin-bottom:6px;line-height:1.2}
+    .post-artist{font-size:.72rem;color:rgba(255,255,255,.42);letter-spacing:.22em;text-transform:uppercase}
+
+    /* CONTENT GRID */
+    .art-grid{display:grid;grid-template-columns:1fr 1fr;gap:42px}
+    .block-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid}
+    .bt-cyan{color:var(--cyan);border-color:rgba(0,212,255,.28)}
+    .bt-purple{color:var(--purple);border-color:rgba(155,89,245,.28)}
+    .art-p{font-size:.9rem;line-height:1.85;color:rgba(255,255,255,.62);margin-bottom:14px}
+    .art-p strong{color:#fff;font-weight:600}
+
+    .quote{padding:14px 18px;margin:18px 0;font-style:italic;font-size:.87rem;line-height:1.72;color:rgba(255,255,255,.68);border-radius:0 12px 12px 0}
+    .q-cyan{border-left:3px solid var(--cyan);background:rgba(0,212,255,.05)}
+    .q-purple{border-left:3px solid var(--purple);background:rgba(155,89,245,.05)}
+
+    .pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+    .pill{padding:5px 12px;border-radius:20px;font-size:.73rem;font-weight:600}
+    .pi-cyan{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.28);color:var(--cyan)}
+    .pi-purple{background:rgba(155,89,245,.1);border:1px solid rgba(155,89,245,.28);color:var(--purple)}
+    .pi-gray{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55)}
+
+    .data{border-radius:14px;padding:18px;margin-top:20px}
+    .d-cyan{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.18)}
+    .d-purple{background:rgba(155,89,245,.04);border:1px solid rgba(155,89,245,.18)}
+    .di{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.81rem}
+    .di:last-child{border-bottom:none}
+    .dk{color:rgba(255,255,255,.42)}
+    .dv-c{color:var(--cyan);font-weight:600}
+    .dv-p{color:var(--purple);font-weight:600}
+
+    /* BOTTOM NAV */
+    .bottom-nav{background:linear-gradient(180deg,var(--bg),#08051a);padding:80px 40px}
+    .bn-inner{max-width:900px;margin:0 auto;text-align:center}
+    .bn-title{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:.2em;color:var(--cyan);margin-bottom:10px}
+    .bn-sub{font-size:.85rem;color:rgba(255,255,255,.35);margin-bottom:36px}
+    .bn-cards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .bn-card{display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:14px;text-decoration:none;font-size:.83rem;font-weight:600;letter-spacing:.06em;transition:all .3s;backdrop-filter:blur(10px)}
+    .bn-home{border:1px solid var(--gb);color:rgba(255,255,255,.48);background:var(--glass)}
+    .bn-home:hover{border-color:rgba(255,255,255,.25);color:#fff}
+    .bn-esfera{border:1px solid rgba(245,200,66,.22);color:var(--gold);background:rgba(245,200,66,.05)}
+    .bn-esfera:hover{border-color:rgba(245,200,66,.5);box-shadow:0 0 18px rgba(245,200,66,.14);transform:translateY(-3px)}
+    .bn-musica{border:1px solid rgba(155,89,245,.22);color:var(--purple);background:rgba(155,89,245,.05)}
+    .bn-musica:hover{border-color:rgba(155,89,245,.5);box-shadow:0 0 18px rgba(155,89,245,.14);transform:translateY(-3px)}
+
+    /* NOVA */
+    #nova-fab{position:fixed;bottom:26px;right:26px;z-index:200;display:flex;align-items:center;gap:9px;padding:11px 17px;background:rgba(3,6,18,.93);border:1px solid rgba(0,255,136,.32);border-radius:40px;cursor:pointer;backdrop-filter:blur(20px);transition:all .3s}
+    #nova-fab:hover{border-color:rgba(0,255,136,.6);transform:translateY(-2px)}
+    .forb{width:8px;height:8px;border-radius:50%;background:var(--neon-g);animation:porb 1.5s infinite}
+    .ftxt{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.15em;color:var(--neon-g)}
+    #nova-panel{position:fixed;bottom:78px;right:26px;z-index:200;width:355px;max-height:510px;background:rgba(3,3,18,.97);border:1px solid rgba(0,255,136,.16);border-radius:22px;backdrop-filter:blur(24px);display:flex;flex-direction:column;overflow:hidden;transition:all .35s cubic-bezier(.23,1,.32,1);transform-origin:bottom right}
+    #nova-panel.closed{opacity:0;pointer-events:none;transform:scale(.82) translateY(14px)}
+    .ph{padding:15px 17px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+    .p-orb{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#00ff88,#00a855,#003320);box-shadow:0 0 13px rgba(0,255,136,.5);animation:porb 2s infinite;flex-shrink:0}
+    .pn{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:.14em;color:var(--neon-g)}
+    .ps{font-size:.62rem;color:rgba(0,255,136,.42);margin-top:2px}
+    .pcl{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.32);cursor:pointer;font-size:1.05rem;padding:4px;transition:color .2s}
+    .pcl:hover{color:#fff}
+    .pmsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+    .pmsgs::-webkit-scrollbar{width:3px}.pmsgs::-webkit-scrollbar-thumb{background:rgba(0,255,136,.18)}
+    .m{max-width:88%;animation:fadeUp .3s ease}.m.n{align-self:flex-start}.m.u{align-self:flex-end}
+    .mb{padding:9px 13px;border-radius:15px;font-size:.83rem;line-height:1.58}
+    .m.n .mb{background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.12);color:rgba(255,255,255,.84);border-radius:4px 15px 15px 15px}
+    .m.u .mb{background:rgba(155,89,245,.13);border:1px solid rgba(155,89,245,.2);color:rgba(255,255,255,.84);border-radius:15px 4px 15px 15px}
+    .sugs{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+    .sg{padding:5px 10px;border:1px solid rgba(0,255,136,.22);border-radius:11px;font-size:.73rem;color:var(--neon-g);cursor:pointer;transition:all .2s;background:transparent;font-family:'Raleway',sans-serif}
+    .sg:hover{background:rgba(0,255,136,.1)}
+    .typ-w{display:flex;gap:5px;align-items:center;padding:9px 13px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.12);border-radius:4px 15px 15px 15px;width:fit-content}
+    .dot{width:5px;height:5px;border-radius:50%;background:var(--neon-g);animation:blink 1.2s infinite}
+    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+    .pinp{padding:11px 13px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:8px;align-items:center}
+    .pi-i{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:8px 12px;color:#fff;font-family:'Raleway',sans-serif;font-size:.83rem;outline:none;transition:border-color .3s}
+    .pi-i:focus{border-color:rgba(0,255,136,.28)}.pi-i::placeholder{color:rgba(255,255,255,.2)}
+    .psnd{width:34px;height:34px;border-radius:50%;background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.26);color:var(--neon-g);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.9rem;flex-shrink:0}
+    .psnd:hover{background:rgba(0,255,136,.22)}
+
+    @media(max-width:768px){.art-grid{grid-template-columns:1fr}section{padding:50px 20px}.hero{padding:40px 20px}.tabs-wrap{padding:30px 20px 0}#nova-panel{width:calc(100vw - 32px);right:16px}}
+  </style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<nav>
+  <a class="back-btn" href="index.html" onclick="goHome()"><span class="back-arr">←</span> Inicio</a>
+  <div class="nav-title">ARTE INMERSIVO</div>
+  <button class="nav-nova" onclick="toggleNova()"><span class="nn-orb"></span>NOVA</button>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="deco" style="width:450px;height:450px;background:var(--cyan);top:-10%;left:-8%"></div>
+    <div class="deco" style="width:350px;height:350px;background:var(--purple);bottom:5%;right:-5%"></div>
+    <div class="hero-inner">
+      <span class="badge">The Sphere · Las Vegas · 2023</span>
+      <h1>Cuando la tecnología <span>se convierte en arte</span></h1>
+      <p>En la Sphere, la ciencia no apoya al arte desde afuera — se convierte en el medio artístico mismo. Dos obras que redefinieron lo que una experiencia inmersiva puede ser.</p>
+    </div>
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab a-rain" id="t-rain" onclick="sw('rain')">◐ Rain Room</button>
+      <button class="tab" id="t-post" onclick="sw('post')">◎ Postcard from Earth</button>
+    </div>
+  </div>
+
+  <!-- RAIN ROOM -->
+  <section id="s-rain" class="panel visible">
+    <div class="sec-wrap">
+      <div class="rain-hero rv">
+        <div class="rain-bg"></div>
+        <div class="rain-container" id="rain-c"></div>
+        <div class="scan"></div>
+        <div class="rain-info">
+          <div class="rain-title">Rain Room</div>
+          <div class="rain-artist">Random International · 2012 · Londres</div>
+        </div>
+      </div>
+      <div class="art-grid rv">
+        <div>
+          <div class="block-title bt-cyan">La Obra</div>
+          <p class="art-p"><strong>Entras a un espacio donde llueve constantemente. No te mojas.</strong> Esa contradicción es el corazón de Rain Room.</p>
+          <p class="art-p">El colectivo londinense <strong>Random International</strong>, fundado en 2005 por Hannes Koch y Florian Ortkrass, creó esta instalación en 2012. Ha sido exhibida en el Barbican (Londres), MoMA (Nueva York), LACMA (Los Ángeles), Shanghái y Riad.</p>
+          <div class="quote q-cyan">"La lluvia tecnológicamente controlada permite experimentar directamente la interferencia humana en los entornos naturales. Se crea una distancia sensorial que habilita la reflexión."</div>
+          <p class="art-p">Cámaras de seguimiento tridimensional identifican la posición exacta de cada visitante. El software detiene el flujo de agua en un radio de <strong>1.80 metros</strong> alrededor de cada persona. Aproximadamente <strong>2,500 litros de agua reciclada</strong> circulan continuamente.</p>
+          <div class="pills">
+            <span class="pill pi-cyan">Visual: negro, gris, blanco</span>
+            <span class="pill pi-cyan">Sonido: lluvia envolvente</span>
+            <span class="pill pi-cyan">Olfato: humedad artificial</span>
+            <span class="pill pi-gray">Táctil: ausencia (el punto)</span>
+          </div>
+        </div>
+        <div>
+          <div class="block-title bt-cyan">Análisis Sensorial</div>
+          <p class="art-p"><strong>Paleta deliberadamente minimalista:</strong> negro, gris y blanco. El espacio oscuro amplifica la visibilidad de las gotas iluminadas. Psicológicamente, elimina distracciones y dirige toda la atención al movimiento del agua.</p>
+          <p class="art-p"><strong>Ritmo constante:</strong> La caída ininterrumpida del agua genera atención total. Solo la entrada del visitante rompe ese ritmo. Estudios sobre sonido repetitivo demuestran cambios de estado emocional que conectan la física del agua con la psicología del espectador.</p>
+          <p class="art-p"><strong>Emociones contradictorias:</strong> asombro ante lo imposible (estar bajo la lluvia sin mojarse), extrañeza, calma del sonido constante equilibrada contra vulnerabilidad e incertidumbre.</p>
+          <div class="quote q-cyan">"La ciencia no apoya el arte externamente — la ciencia se <em>convierte</em> en el arte. Los sistemas perfectamente diseñados hacen posible, única e increíble esta obra."</div>
+          <div class="data d-cyan">
+            <div class="di"><span class="dk">Área de instalación</span><span class="dv-c">~100 m²</span></div>
+            <div class="di"><span class="dk">Zona seca por persona</span><span class="dv-c">1.80 m radio</span></div>
+            <div class="di"><span class="dk">Agua en circulación</span><span class="dv-c">~2,500 litros</span></div>
+            <div class="di"><span class="dk">Tecnología</span><span class="dv-c">Cámaras 3D + software</span></div>
+            <div class="di"><span class="dk">Espacio de color</span><span class="dv-c">Negro, gris, blanco</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTCARD FROM EARTH -->
+  <section id="s-post" class="panel">
+    <div class="sec-wrap">
+      <div class="post-hero rv">
+        <div class="post-canvas-wrap"><canvas id="post-canvas"></canvas></div>
+        <div class="post-info">
+          <div class="post-title">Postcard from Earth</div>
+          <div class="post-artist">Darren Aronofsky · 2023 · MSG Sphere, Las Vegas</div>
+        </div>
+      </div>
+      <div class="art-grid rv">
+        <div>
+          <div class="block-title bt-purple">La Obra</div>
+          <p class="art-p"><strong>Un viaje de 50 minutos a través de los paisajes del planeta.</strong> Océanos, desiertos, selvas, ecosistemas — los espectadores no los observan, los <em>habitan</em>.</p>
+          <p class="art-p"><strong>Darren Aronofsky</strong> (Requiem for a Dream, Black Swan, The Whale) diseñó esta obra específicamente para la Sphere en 2023. Es el primer gran director en crear contenido nativo para este formato. La narrativa: astronautas que regresan a la Tierra para rememorar su grandeza.</p>
+          <p class="art-p">La pantalla de <strong>16K × 16K</strong> y más de <strong>15,000 m²</strong> cubre completamente el campo visual. Los límites del cine tradicional desaparecen — no hay marco, no hay pantalla: solo entorno.</p>
+          <div class="quote q-purple">"La escena está organizada para que el espectador no contemple — habite. Paisajes como cañones y montañas ocupan todo el campo visual, creando inmersión donde cada elemento dirige la atención y genera impacto."</div>
+          <div class="pills">
+            <span class="pill pi-purple">Visual: 360° hiperreal</span>
+            <span class="pill pi-purple">Audio: 3D espacial</span>
+            <span class="pill pi-purple">Táctil: asientos hápticos</span>
+            <span class="pill pi-gray">Duración: ~50 min</span>
+          </div>
+        </div>
+        <div>
+          <div class="block-title bt-purple">Análisis Técnico-Artístico</div>
+          <p class="art-p"><strong>Composición:</strong> Abre con ciencia ficción guiando la narrativa. Ocasionales voice-overs evitan sobrecargar lo visual, permitiendo que la imagen de la Tierra como "sinfonía magnífica congelada en el tiempo" ocupe el centro.</p>
+          <p class="art-p"><strong>Movimiento:</strong> Transiciones fluidas y desplazamientos de cámara refuerzan la sensación de viaje. Paneos amplios, barridos horizontales, zoom-ins progresivos. Sin cortes abruptos — continuidad visual total.</p>
+          <p class="art-p"><strong>Escala:</strong> Dimensiones monumentales intensifican la experiencia. Los efectos 4D —vibraciones, viento— expanden la escala más allá de lo visual hacia lo corporal. El espectador no está sentado viendo — está <em>adentro</em>.</p>
+          <div class="data d-purple">
+            <div class="di"><span class="dk">Resolución</span><span class="dv-p">16K × 16K</span></div>
+            <div class="di"><span class="dk">Píxeles totales</span><span class="dv-p">>250 millones</span></div>
+            <div class="di"><span class="dk">Superficie de pantalla</span><span class="dv-p">>15,000 m²</span></div>
+            <div class="di"><span class="dk">Efectos físicos</span><span class="dv-p">Háptico, viento, vibración</span></div>
+            <div class="di"><span class="dk">Duración</span><span class="dv-p">~50 minutos</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bottom-nav">
+    <div class="bn-inner rv">
+      <div class="bn-title">¿Y ahora a dónde quieres ir?</div>
+      <div class="bn-sub">Hay más por explorar</div>
+      <div class="bn-cards">
+        <a class="bn-card bn-home" href="index.html" onclick="goHome()">← Inicio</a>
+        <a class="bn-card bn-esfera" href="esfera.html">◉ La Esfera →</a>
+        <a class="bn-card bn-musica" href="musica.html">♫ Música →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="nova-fab" onclick="toggleNova()"><span class="forb"></span><span class="ftxt">ASK NOVA</span></div>
+<div id="nova-panel" class="closed">
+  <div class="ph"><div class="p-orb"></div><div><div class="pn">NOVA</div><div class="ps">Sección: Arte Inmersivo</div></div><button class="pcl" onclick="toggleNova()">✕</button></div>
+  <div class="pmsgs" id="pmsgs"></div>
+  <div class="pinp"><input class="pi-i" id="pi" placeholder="Pregunta sobre el arte inmersivo..." onkeydown="if(event.key==='Enter')snd()" /><button class="psnd" onclick="snd()">↑</button></div>
+</div>
+
+<script>
+// STARS
+const sc=document.getElementById('stars'),sctx=sc.getContext('2d');let stars=[];function rsz(){sc.width=innerWidth;sc.height=innerHeight;}rsz();window.addEventListener('resize',rsz);for(let i=0;i<200;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,a:Math.random()*.6+.2,s:Math.random()*.0004+.0001});(function ds(){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.a+=Math.sin(Date.now()*s.s)*.005;s.a=Math.max(.1,Math.min(.8,s.a));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(255,255,255,${s.a})`;sctx.fill();});requestAnimationFrame(ds);})();
+
+// RAIN
+(()=>{const c=document.getElementById('rain-c');if(!c)return;for(let i=0;i<90;i++){const d=document.createElement('div');d.className='rdrop';d.style.left=Math.random()*100+'%';d.style.height=(8+Math.random()*18)+'px';d.style.animationDuration=(.3+Math.random()*.55)+'s';d.style.animationDelay=(Math.random()*2.5)+'s';d.style.opacity=.3+Math.random()*.55;c.appendChild(d);}})();
+
+// POSTCARD CANVAS
+(()=>{const wrap=document.querySelector('.post-canvas-wrap');if(!wrap)return;const canvas=document.createElement('canvas');canvas.style.cssText='width:100%;height:100%;position:absolute;inset:0';wrap.appendChild(canvas);function sz(){canvas.width=wrap.offsetWidth||1000;canvas.height=wrap.offsetHeight||320;}sz();const ctx=canvas.getContext('2d');const orbs=[{x:.12,y:.35,r:160,c:'#180535',a:.85},{x:.55,y:.25,r:220,c:'#280a10',a:.7},{x:.88,y:.65,r:130,c:'#0a1540',a:.6},{x:.35,y:.8,r:180,c:'#0a0535',a:.5}];function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);orbs.forEach(o=>{const g=ctx.createRadialGradient(o.x*canvas.width,o.y*canvas.height,0,o.x*canvas.width,o.y*canvas.height,o.r);g.addColorStop(0,o.c);g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(o.x*canvas.width,o.y*canvas.height,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.globalAlpha=o.a;ctx.fill();ctx.globalAlpha=1;});for(let i=0;i<130;i++){ctx.beginPath();ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height,Math.random()*1.5,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${Math.random()*.55+.1})`;ctx.fill();}}draw();window.addEventListener('resize',()=>{sz();draw();});})();
+
+// TABS
+function sw(which){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('visible'));document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('a-rain','a-post');});document.getElementById('s-'+which).classList.add('visible');if(which==='rain'){document.getElementById('t-rain').classList.add('a-rain');}else{document.getElementById('t-post').classList.add('a-post');}document.querySelectorAll('.rv').forEach(el=>el.classList.add('vis'));}
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// NAV
+function goHome(){sessionStorage.setItem('sphere-from','arte');}
+
+// NOVA
+const SUGS_ARTE=['¿Qué es Rain Room?','¿Por qué no te mojas en Rain Room?','¿Quién hizo Postcard from Earth?','¿Qué se siente ver Postcard from Earth?','¿Dónde más se ha exhibido Rain Room?'];
+const KB={
+  'rain room':'Rain Room de Random International es una instalación donde caminas bajo la lluvia sin mojarte. Cámaras 3D rastrean tu posición y detienen el agua en 1.80m de radio. Usa ~2,500 litros de agua reciclada en un espacio de ~100 m².',
+  'no te mojas':'Las cámaras de seguimiento 3D identifican tu posición en tiempo real. El software detiene automáticamente el flujo de agua en un radio de 1.80 metros alrededor de ti. El agua cae en todas partes... menos donde estás tú.',
+  'secar':'El sistema detecta tu posición con cámaras 3D y crea una "zona seca" de 1.80m de radio a tu alrededor. Es tecnología de tracking en tiempo real aplicada como arte.',
+  'como funciona':'El sistema de Rain Room usa cámaras 3D que rastrean tu posición y software que detiene el agua a 1.80m de radio. ~2,500 litros de agua reciclada circulan constantemente.',
+  'random international':'Random International es un colectivo de arte con sede en Londres, fundado en 2005 por Hannes Koch y Florian Ortkrass. Sus obras se han exhibido en Barbican, MoMA, LACMA, Shanghái y Riad.',
+  'hannes':'Hannes Koch y Florian Ortkrass fundaron Random International en 2005. Son reconocidos por integrar tecnología avanzada como componente fundamental de la experiencia artística.',
+  'postcard':'Postcard from Earth de Darren Aronofsky es un viaje inmersivo de ~50 minutos por paisajes planetarios. La pantalla 16K de la Sphere te rodea completamente, eliminando los límites del cine tradicional.',
+  'aronofsky':'Darren Aronofsky (1969) es el director de Requiem for a Dream, Black Swan y The Whale. Postcard from Earth fue diseñada específicamente para la Sphere — su primera obra creada para formato inmersivo.',
+  'que se siente':'Los espectadores describen sentirse físicamente presentes en los paisajes. La pantalla 360° de 16K y los efectos 4D (viento, vibración en asientos) crean una inmersión que el cine convencional no puede replicar.',
+  'duracion':'Postcard from Earth dura aproximadamente 50 minutos. Es un viaje guiado por astronautas que regresan a la Tierra y recorren sus ecosistemas más impresionantes.',
+  'colores':'Rain Room usa paleta minimalista: negro, gris y blanco, para amplificar la visibilidad del agua. Postcard from Earth usa colores intensos que la tecnología 16K amplifica con saturación superior a pantallas convencionales.',
+  'emociones':'Rain Room genera asombro mezclado con extrañeza — estar bajo la lluvia sin mojarte es contradictorio. Postcard from Earth genera asombro ante la belleza natural y reflexión sobre el futuro del planeta.',
+  'critica':'Rain Room plantea la relación entre tecnología y naturaleza, y cómo los humanos nos distanciamos de los fenómenos naturales. Postcard from Earth genera conciencia ambiental sobre el impacto humano en el planeta.',
+  'barbican':'Rain Room fue exhibida por primera vez en el Barbican de Londres. Luego viajó al MoMA de Nueva York, LACMA de Los Ángeles, Shanghái y Riad.',
+  'moma':'Rain Room estuvo en el MoMA de Nueva York. Generó colas de horas y se convirtió en una de las exhibiciones más visitadas del museo en años.',
+  'diferencia':'Rain Room es una instalación que le da al visitante protagonismo activo — tú eres quien determina qué zona queda seca. Postcard from Earth es más contemplativa — te llevan en un viaje como pasajero.',
+  'hola':'¡Hola! Estás en la sección de Arte Inmersivo. Puedo contarte sobre Rain Room (la instalación de lluvia de Random International) o Postcard from Earth (el film inmersivo de Darren Aronofsky). ¿Qué te interesa?',
+  'gracias':'¡Con mucho gusto! Hay mucho más que explorar aquí y en las otras secciones.',
+};
+
+let open=false,init=false;
+function toggleNova(){open=!open;document.getElementById('nova-panel').classList.toggle('closed',!open);if(open&&!init){init=true;setTimeout(()=>{addM('n','¡Bienvenido al Arte Inmersivo! ✦ Aquí exploramos dos obras que usan la tecnología como su medio artístico principal. ¿Sobre cuál quieres empezar?');setTimeout(()=>addS(['¿Qué es Rain Room?','¿Qué es Postcard from Earth?','¿Cuál es la diferencia entre ambas?']),500);},280);}}
+function nrm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'');}
+function getR(q){const nq=nrm(q);let best=null,bl=0;for(const[k,v]of Object.entries(KB)){const nk=nrm(k);if(nq.includes(nk)&&nk.length>bl){best=v;bl=nk.length;}}return best;}
+function addM(t,txt){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.className='m '+t;d.innerHTML=`<div class="mb">${txt}</div>`;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function addS(ss){const m=document.getElementById('pmsgs');const w=document.createElement('div');w.className='m n';const i=document.createElement('div');i.className='sugs';ss.forEach(s=>{const b=document.createElement('button');b.className='sg';b.textContent=s;b.onclick=()=>{w.remove();sw2(s);};i.appendChild(b);});w.appendChild(i);m.appendChild(w);m.scrollTop=m.scrollHeight;}
+function showT(){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.id='typ';d.className='m n';d.innerHTML='<div class="typ-w"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function rmT(){const t=document.getElementById('typ');if(t)t.remove();}
+function sw2(txt){addM('u',txt);showT();setTimeout(()=>{rmT();const r=getR(txt);if(r){addM('n',r);}else{addM('n','Eso aún no lo tengo en mis archivos 🤔 — pero puedes preguntarme algo así:');setTimeout(()=>addS(SUGS_ARTE.slice(0,3)),300);}},620+Math.random()*380);}
+function snd(){const i=document.getElementById('pi');const t=i.value.trim();if(!t)return;i.value='';sw2(t);}
+</script>
+</body>
+</html>

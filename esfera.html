@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Esfera · The Sphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#04040f;--gold:#f5c842;--gold-dim:#c49a1a;--cyan:#00d4ff;--purple:#9b59f5;--neon-g:#00ff88;--red:#ff4f6b;--glass:rgba(255,255,255,.04);--gb:rgba(255,255,255,.08)}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:#e0e0f0;font-family:'Raleway',sans-serif;overflow-x:hidden}
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+    #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 36px;background:rgba(4,4,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--gb)}
+    .back-btn{display:flex;align-items:center;gap:8px;font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:.18em;color:rgba(255,255,255,.45);cursor:pointer;text-decoration:none;transition:color .3s}
+    .back-btn:hover{color:var(--gold)}
+    .back-arr{transition:transform .3s}
+    .back-btn:hover .back-arr{transform:translateX(-4px)}
+    .nav-title{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:.2em;color:var(--gold)}
+    .nav-nova{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid rgba(0,255,136,.28);border-radius:30px;background:rgba(0,255,136,.04);color:var(--neon-g);font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.14em;cursor:pointer;transition:all .3s}
+    .nav-nova:hover{background:rgba(0,255,136,.1);box-shadow:0 0 14px rgba(0,255,136,.18)}
+    .nn-orb{width:7px;height:7px;border-radius:50%;background:var(--neon-g);animation:porb 1.5s infinite}
+    @keyframes porb{0%,100%{box-shadow:0 0 6px rgba(0,255,136,.6)}50%{box-shadow:0 0 14px rgba(0,255,136,1)}}
+
+    /* MAIN */
+    main{position:relative;z-index:1;padding-top:70px}
+
+    /* HERO */
+    .hero{min-height:92vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px 40px}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(245,200,66,.07) 0%,transparent 70%)}
+    .deco{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);opacity:.1}
+    .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;max-width:1100px;width:100%}
+    .hero-text .badge{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block}
+    .hero-text h1{font-family:'Orbitron',sans-serif;font-size:clamp(2.2rem,5vw,4rem);font-weight:900;line-height:1.05;margin-bottom:20px}
+    .hero-text h1 span{background:linear-gradient(135deg,#f5c842,#ff9a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-text p{font-size:.95rem;line-height:1.85;color:rgba(255,255,255,.6);margin-bottom:28px}
+    .stat-row{display:flex;gap:14px;flex-wrap:wrap}
+    .stat{text-align:center;padding:14px 18px;background:var(--glass);border:1px solid var(--gb);border-radius:14px;min-width:90px}
+    .stat-n{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--gold);display:block}
+    .stat-l{font-size:.65rem;color:rgba(255,255,255,.38);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;display:block}
+    .hero-sphere{display:flex;align-items:center;justify-content:center}
+    #hero-canvas{filter:drop-shadow(0 0 50px rgba(245,200,66,.55));animation:float 4.5s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+
+    /* SECTIONS SHARED */
+    section{position:relative;z-index:1;padding:90px 40px}
+    .sec-wrap{max-width:1100px;margin:0 auto}
+    .sec-label{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:13px}
+    .sec-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;background:linear-gradient(135deg,#f5c842,#ff9a3c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;line-height:1.1}
+    .sec-desc{font-size:.95rem;line-height:1.85;color:rgba(255,255,255,.58);max-width:680px;margin-bottom:50px}
+
+    /* REVEAL */
+    .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+    .rv.vis{opacity:1;transform:translateY(0)}
+
+    /* ABOUT GRID */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+    .about-p{font-size:.93rem;line-height:1.88;color:rgba(255,255,255,.62);margin-bottom:16px}
+    .about-p strong{color:var(--gold);font-weight:600}
+
+    /* SPECS */
+    .specs-g{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .spec{background:var(--glass);border:1px solid var(--gb);border-radius:16px;padding:18px 20px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+    .spec::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55}
+    .spec:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(245,200,66,.1)}
+    .spec-num{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold)}
+    .spec-unit{font-size:.7rem;color:rgba(255,255,255,.38)}
+    .spec-lbl{font-size:.75rem;color:rgba(255,255,255,.45);margin-top:4px;letter-spacing:.08em}
+
+    /* TIMELINE */
+    .tl{max-width:860px;margin:0 auto;padding-top:20px}
+    .tl-title{font-family:'Orbitron',sans-serif;font-size:1rem;color:var(--gold);text-align:center;letter-spacing:.2em;margin-bottom:40px}
+    .tl-list{position:relative}
+    .tl-list::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--gold-dim),transparent);transform:translateX(-50%)}
+    .tl-item{display:flex;gap:30px;margin-bottom:36px;align-items:flex-start}
+    .tl-item:nth-child(even){flex-direction:row-reverse}
+    .tl-c{flex:1;background:var(--glass);border:1px solid var(--gb);border-radius:13px;padding:18px 22px;backdrop-filter:blur(10px)}
+    .tl-item:nth-child(odd) .tl-c{text-align:right}
+    .tl-dot-wrap{flex-shrink:0;width:32px;display:flex;justify-content:center;padding-top:5px}
+    .tl-d{width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px rgba(245,200,66,.6)}
+    .tl-y{font-family:'Orbitron',sans-serif;font-size:.8rem;color:var(--gold);font-weight:600}
+    .tl-e{font-size:.84rem;color:rgba(255,255,255,.65);margin-top:4px;line-height:1.5}
+
+    /* TECH GRID */
+    .tech-g{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1000px;margin:0 auto}
+    .tech{background:var(--glass);border:1px solid var(--gb);border-radius:20px;padding:26px 22px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+    .tech::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,200,66,.04),transparent 60%);pointer-events:none}
+    .tech:hover{transform:translateY(-6px);border-color:rgba(245,200,66,.28)}
+    .tech-ic{font-size:2rem;margin-bottom:12px}
+    .tech-n{font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:.14em;color:var(--gold);margin-bottom:9px}
+    .tech-d{font-size:.8rem;color:rgba(255,255,255,.48);line-height:1.62}
+
+    /* BOTTOM NAV */
+    .bottom-nav{background:linear-gradient(180deg,var(--bg),#0c0820);padding:80px 40px}
+    .bn-inner{max-width:900px;margin:0 auto;text-align:center}
+    .bn-title{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:.2em;color:var(--gold);margin-bottom:10px}
+    .bn-sub{font-size:.85rem;color:rgba(255,255,255,.38);margin-bottom:36px}
+    .bn-cards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+    .bn-card{display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:14px;text-decoration:none;font-size:.83rem;font-weight:600;letter-spacing:.06em;transition:all .3s;backdrop-filter:blur(10px)}
+    .bn-home{border:1px solid var(--gb);color:rgba(255,255,255,.5);background:var(--glass)}
+    .bn-home:hover{border-color:rgba(255,255,255,.25);color:#fff}
+    .bn-arte{border:1px solid rgba(0,212,255,.22);color:var(--cyan);background:rgba(0,212,255,.05)}
+    .bn-arte:hover{border-color:rgba(0,212,255,.5);box-shadow:0 0 18px rgba(0,212,255,.15);transform:translateY(-3px)}
+    .bn-musica{border:1px solid rgba(155,89,245,.22);color:var(--purple);background:rgba(155,89,245,.05)}
+    .bn-musica:hover{border-color:rgba(155,89,245,.5);box-shadow:0 0 18px rgba(155,89,245,.15);transform:translateY(-3px)}
+
+    /* NOVA */
+    #nova-fab{position:fixed;bottom:26px;right:26px;z-index:200;display:flex;align-items:center;gap:9px;padding:11px 17px;background:rgba(3,6,18,.93);border:1px solid rgba(0,255,136,.32);border-radius:40px;cursor:pointer;backdrop-filter:blur(20px);transition:all .3s;box-shadow:0 0 18px rgba(0,255,136,.1)}
+    #nova-fab:hover{border-color:rgba(0,255,136,.6);box-shadow:0 0 26px rgba(0,255,136,.2);transform:translateY(-2px)}
+    .forb{width:8px;height:8px;border-radius:50%;background:var(--neon-g);animation:porb 1.5s infinite}
+    .ftxt{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.15em;color:var(--neon-g)}
+    #nova-panel{position:fixed;bottom:78px;right:26px;z-index:200;width:355px;max-height:510px;background:rgba(3,3,18,.97);border:1px solid rgba(0,255,136,.16);border-radius:22px;backdrop-filter:blur(24px);display:flex;flex-direction:column;overflow:hidden;transition:all .35s cubic-bezier(.23,1,.32,1);transform-origin:bottom right}
+    #nova-panel.closed{opacity:0;pointer-events:none;transform:scale(.82) translateY(14px)}
+    .ph{padding:15px 17px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:10px}
+    .p-orb{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#00ff88,#00a855,#003320);box-shadow:0 0 13px rgba(0,255,136,.5);animation:porb 2s infinite;flex-shrink:0}
+    .pn{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:.14em;color:var(--neon-g)}
+    .ps{font-size:.62rem;color:rgba(0,255,136,.42);margin-top:2px}
+    .pcl{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.32);cursor:pointer;font-size:1.05rem;padding:4px;transition:color .2s}
+    .pcl:hover{color:#fff}
+    .pmsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+    .pmsgs::-webkit-scrollbar{width:3px}
+    .pmsgs::-webkit-scrollbar-thumb{background:rgba(0,255,136,.18)}
+    .m{max-width:88%;animation:fadeUp .3s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .m.n{align-self:flex-start}.m.u{align-self:flex-end}
+    .mb{padding:9px 13px;border-radius:15px;font-size:.83rem;line-height:1.58}
+    .m.n .mb{background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.12);color:rgba(255,255,255,.84);border-radius:4px 15px 15px 15px}
+    .m.u .mb{background:rgba(155,89,245,.13);border:1px solid rgba(155,89,245,.2);color:rgba(255,255,255,.84);border-radius:15px 4px 15px 15px}
+    .sugs{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+    .sg{padding:5px 10px;border:1px solid rgba(0,255,136,.22);border-radius:11px;font-size:.73rem;color:var(--neon-g);cursor:pointer;transition:all .2s;background:transparent;font-family:'Raleway',sans-serif}
+    .sg:hover{background:rgba(0,255,136,.1)}
+    .typ-w{display:flex;gap:5px;align-items:center;padding:9px 13px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.12);border-radius:4px 15px 15px 15px;width:fit-content}
+    .dot{width:5px;height:5px;border-radius:50%;background:var(--neon-g);animation:blink 1.2s infinite}
+    .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+    .pinp{padding:11px 13px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:8px;align-items:center}
+    .pi{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:8px 12px;color:#fff;font-family:'Raleway',sans-serif;font-size:.83rem;outline:none;transition:border-color .3s}
+    .pi:focus{border-color:rgba(0,255,136,.28)}
+    .pi::placeholder{color:rgba(255,255,255,.2)}
+    .psnd{width:34px;height:34px;border-radius:50%;background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.26);color:var(--neon-g);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.9rem;flex-shrink:0}
+    .psnd:hover{background:rgba(0,255,136,.22)}
+
+    @media(max-width:768px){.hero-inner,.about-grid,.specs-g{grid-template-columns:1fr}.tech-g{grid-template-columns:1fr 1fr}.hero{padding:40px 20px}.hero-sphere{order:-1}section{padding:60px 20px}.tl-item,.tl-item:nth-child(even){flex-direction:column}.tl-list::before{left:14px}.tl-dot-wrap{width:28px}#nova-panel{width:calc(100vw - 32px);right:16px}}
+  </style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<nav>
+  <a class="back-btn" href="index.html" onclick="goHome()">
+    <span class="back-arr">←</span> Inicio
+  </a>
+  <div class="nav-title">LA ESFERA</div>
+  <button class="nav-nova" onclick="toggleNova()"><span class="nn-orb"></span>NOVA</button>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="deco" style="width:500px;height:500px;background:var(--gold);top:-10%;right:-10%"></div>
+    <div class="deco" style="width:300px;height:300px;background:var(--cyan);bottom:10%;left:-5%"></div>
+    <div class="hero-inner">
+      <div class="hero-text rv">
+        <span class="badge">MSG Entertainment · Las Vegas, Nevada</span>
+        <h1><span>The Sphere</span><br/>La arena más grande del mundo</h1>
+        <p>Inaugurada en septiembre de 2023, la MSG Sphere redefine lo que un venue de entretenimiento puede ser. No es solo una arena — es un experimento arquitectónico y tecnológico sin precedentes.</p>
+        <div class="stat-row">
+          <div class="stat"><span class="stat-n">112<span style="font-size:.55em">m</span></span><span class="stat-l">Altura</span></div>
+          <div class="stat"><span class="stat-n">16K</span><span class="stat-l">Resolución</span></div>
+          <div class="stat"><span class="stat-n">250M+</span><span class="stat-l">Píxeles</span></div>
+          <div class="stat"><span class="stat-n">2023</span><span class="stat-l">Inauguración</span></div>
+        </div>
+      </div>
+      <div class="hero-sphere rv">
+        <canvas id="hero-canvas" width="340" height="340"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section style="background:linear-gradient(180deg,var(--bg) 0%,#080818 50%,var(--bg) 100%)">
+    <div class="sec-wrap">
+      <div class="rv">
+        <span class="sec-label">01 · La Estructura</span>
+        <h2 class="sec-title">Una fusión de ingeniería y arte</h2>
+        <p class="sec-desc">La Sphere no es un venue convencional. Es una declaración de que la tecnología y el arte no solo pueden coexistir — son inseparables.</p>
+      </div>
+      <div class="about-grid rv">
+        <div>
+          <p class="about-p"><strong>La Sphere no es simplemente un venue de entretenimiento.</strong> Es un experimento arquitectónico y tecnológico sin precedentes, diseñado desde cero para crear experiencias imposibles en cualquier otro lugar del mundo.</p>
+          <p class="about-p">Con <strong>112 metros de altura</strong> y <strong>157 metros de diámetro</strong>, su forma esférica no es arbitraria: maximiza la superficie de pantalla visible desde cualquier punto interior, eliminando el concepto de "mala butaca".</p>
+          <p class="about-p">Desarrollada por <strong>MSG Entertainment</strong> y diseñada por <strong>Populous</strong>, la Sphere representa exactamente esto: ni la ingeniería ni el arte pueden existir aquí de forma independiente.</p>
+          <p class="about-p">La ciencia se manifiesta a través de la infraestructura tecnológica — pantallas LED, sistemas de sonido envolvente, gestión de datos — mientras que el arte provee el contenido visual, sonoro y conceptual. <strong>Ninguna disciplina podría lograrlo sola.</strong></p>
+        </div>
+        <div class="specs-g">
+          <div class="spec rv"><div class="spec-num">16K<span class="spec-unit">×16K</span></div><div class="spec-lbl">Resolución de pantalla interior</div></div>
+          <div class="spec rv"><div class="spec-num">15,000<span class="spec-unit">m²</span></div><div class="spec-lbl">Superficie de pantalla LED</div></div>
+          <div class="spec rv"><div class="spec-num">250M+</div><div class="spec-lbl">Píxeles totales</div></div>
+          <div class="spec rv"><div class="spec-num">157<span class="spec-unit">m</span></div><div class="spec-lbl">Diámetro de la estructura</div></div>
+          <div class="spec rv"><div class="spec-num">3D</div><div class="spec-lbl">Audio surround espacial</div></div>
+          <div class="spec rv"><div class="spec-num">4D</div><div class="spec-lbl">Háptico, viento y vibración</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section>
+    <div class="sec-wrap">
+      <div class="rv" style="text-align:center;margin-bottom:50px">
+        <span class="sec-label" style="text-align:center;display:block">02 · Historia</span>
+        <h2 class="sec-title" style="text-align:center">Cronología de la Sphere</h2>
+      </div>
+      <div class="tl rv">
+        <div class="tl-list">
+          <div class="tl-item">
+            <div class="tl-c"><div class="tl-y">2018</div><div class="tl-e">MSG Entertainment anuncia el proyecto. Inicio del diseño arquitectónico con Populous. Presupuesto inicial estimado: $1.2 mil millones.</div></div>
+            <div class="tl-dot-wrap"><div class="tl-d"></div></div>
+            <div class="tl-c" style="background:transparent;border-color:transparent"></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-c" style="background:transparent;border-color:transparent"></div>
+            <div class="tl-dot-wrap"><div class="tl-d"></div></div>
+            <div class="tl-c"><div class="tl-y">2021</div><div class="tl-e">Inicio oficial de construcción en Las Vegas. El proyecto enfrenta retrasos y sobrecostos — el presupuesto sube a ~$1.66 mil millones.</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-c"><div class="tl-y">Sep 2023</div><div class="tl-e">Inauguración oficial con U2 — <em>UV Achtung Baby Live</em>. El costo final alcanza los ~$2.3 mil millones. La arena más cara jamás construida.</div></div>
+            <div class="tl-dot-wrap"><div class="tl-d"></div></div>
+            <div class="tl-c" style="background:transparent;border-color:transparent"></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-c" style="background:transparent;border-color:transparent"></div>
+            <div class="tl-dot-wrap"><div class="tl-d"></div></div>
+            <div class="tl-c"><div class="tl-y">2023–2024</div><div class="tl-e">Estreno de <em>Postcard from Earth</em> de Darren Aronofsky. Presentaciones de Backstreet Boys y otros artistas. La Sphere se consolida como el venue del futuro.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH -->
+  <section style="background:linear-gradient(180deg,var(--bg) 0%,#0a0820 50%,var(--bg) 100%)">
+    <div class="sec-wrap">
+      <div class="rv" style="text-align:center;margin-bottom:50px">
+        <span class="sec-label" style="display:block;text-align:center">03 · Tecnología</span>
+        <h2 class="sec-title" style="text-align:center">El sistema que hace posible lo imposible</h2>
+      </div>
+      <div class="tech-g rv">
+        <div class="tech"><div class="tech-ic">🖥</div><div class="tech-n">Pantalla LED 16K</div><div class="tech-d">La mayor pantalla LED del mundo. Saturación de color más amplia que cualquier pantalla convencional. Colores más puros y profundos.</div></div>
+        <div class="tech"><div class="tech-ic">🔊</div><div class="tech-n">Audio 3D Espacial</div><div class="tech-d">El sonido emana de múltiples direcciones simultáneamente. No se escucha desde un punto — parece atravesar el espacio físico sincronizado con las imágenes.</div></div>
+        <div class="tech"><div class="tech-ic">⚡</div><div class="tech-n">Efectos 4D</div><div class="tech-d">Asientos con retroalimentación háptica, viento sincronizado, vibraciones sísmicas. La experiencia se extiende del campo visual al cuerpo completo.</div></div>
+        <div class="tech"><div class="tech-ic">◉</div><div class="tech-n">AR / VR Integration</div><div class="tech-d">Realidad aumentada y virtual integradas. Los espectadores no solo observan — experimentan realidades completamente nuevas.</div></div>
+        <div class="tech"><div class="tech-ic">🛰</div><div class="tech-n">Tracking en Tiempo Real</div><div class="tech-d">Cámaras 3D y sistemas de procesamiento rastrean posiciones en tiempo real, permitiendo experiencias que responden al movimiento.</div></div>
+        <div class="tech"><div class="tech-ic">🌐</div><div class="tech-n">Exterior LED</div><div class="tech-d">El exterior también cuenta con paneles LED. La Sphere se convierte en un hito visual del skyline de Las Vegas antes incluso de entrar.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="bn-inner rv">
+      <div class="bn-title">¿Y ahora a dónde quieres ir?</div>
+      <div class="bn-sub">Sigue explorando la experiencia completa</div>
+      <div class="bn-cards">
+        <a class="bn-card bn-home" href="index.html" onclick="goHome()">← Inicio</a>
+        <a class="bn-card bn-arte" href="arte.html">✦ Arte Inmersivo →</a>
+        <a class="bn-card bn-musica" href="musica.html">♫ Música →</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- NOVA -->
+<div id="nova-fab" onclick="toggleNova()"><span class="forb"></span><span class="ftxt">ASK NOVA</span></div>
+<div id="nova-panel" class="closed">
+  <div class="ph"><div class="p-orb"></div><div><div class="pn">NOVA</div><div class="ps">Sección: La Esfera</div></div><button class="pcl" onclick="toggleNova()">✕</button></div>
+  <div class="pmsgs" id="pmsgs"></div>
+  <div class="pinp"><input class="pi" id="pi" placeholder="Pregunta sobre la Esfera..." onkeydown="if(event.key==='Enter')snd()" /><button class="psnd" onclick="snd()">↑</button></div>
+</div>
+
+<script>
+// STARS
+const sc=document.getElementById('stars'),sctx=sc.getContext('2d');let stars=[];function rsz(){sc.width=innerWidth;sc.height=innerHeight;}rsz();window.addEventListener('resize',rsz);for(let i=0;i<200;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,a:Math.random()*.6+.2,s:Math.random()*.0004+.0001});(function ds(){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.a+=Math.sin(Date.now()*s.s)*.005;s.a=Math.max(.1,Math.min(.8,s.a));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(255,255,255,${s.a})`;sctx.fill();});requestAnimationFrame(ds);})();
+
+// HERO SPHERE
+const hc=document.getElementById('hero-canvas'),hctx=hc.getContext('2d');let hps=[];for(let i=0;i<70;i++)hps.push({a:Math.random()*Math.PI*2,r:100+Math.random()*55,sp:(Math.random()-.5)*.009,sz:Math.random()*2.2+.5,al:Math.random()*.6+.2,tilt:Math.random()*Math.PI});
+function drwH(t){hctx.clearRect(0,0,340,340);const cx=170,cy=170,r=108;let g=hctx.createRadialGradient(cx,cy,0,cx,cy,r*1.7);g.addColorStop(0,'rgba(245,200,66,.14)');g.addColorStop(.5,'rgba(245,200,66,.04)');g.addColorStop(1,'transparent');hctx.beginPath();hctx.arc(cx,cy,r*1.7,0,Math.PI*2);hctx.fillStyle=g;hctx.fill();let sg=hctx.createRadialGradient(cx-30,cy-30,6,cx,cy,r);sg.addColorStop(0,'#fff8e0');sg.addColorStop(.3,'#f5c842');sg.addColorStop(.7,'#c49a0a');sg.addColorStop(1,'#3a2800');hctx.beginPath();hctx.arc(cx,cy,r,0,Math.PI*2);hctx.fillStyle=sg;hctx.fill();hctx.save();hctx.beginPath();hctx.arc(cx,cy,r,0,Math.PI*2);hctx.clip();hctx.strokeStyle='rgba(0,0,0,.1)';hctx.lineWidth=.8;for(let i=-r;i<r;i+=16){const y2=cy+i,hw=Math.sqrt(Math.max(0,r*r-i*i));hctx.beginPath();hctx.moveTo(cx-hw,y2);hctx.lineTo(cx+hw,y2);hctx.stroke();hctx.beginPath();hctx.moveTo(cx+i,cy-hw);hctx.lineTo(cx+i,cy+hw);hctx.stroke();}hctx.restore();let sp=hctx.createRadialGradient(cx-32,cy-32,2,cx-20,cy-20,42);sp.addColorStop(0,'rgba(255,255,255,.4)');sp.addColorStop(1,'transparent');hctx.beginPath();hctx.arc(cx,cy,r,0,Math.PI*2);hctx.fillStyle=sp;hctx.fill();for(let ring=0;ring<3;ring++){hctx.save();hctx.translate(cx,cy);hctx.rotate(t*(.3+ring*.15)+ring*1.2);hctx.scale(1,.28+ring*.05);hctx.beginPath();hctx.arc(0,0,r*(1.14+ring*.18),0,Math.PI*2);hctx.strokeStyle=`rgba(0,212,255,${.38-ring*.1})`;hctx.lineWidth=1.5;hctx.stroke();hctx.restore();}hps.forEach(p=>{p.a+=p.sp;const px=cx+Math.cos(p.a)*p.r*Math.cos(p.tilt),py=cy+Math.sin(p.a)*p.r*.3;if(Math.abs(px-cx)<r*.88&&Math.abs(py-cy)<r*.88)return;hctx.beginPath();hctx.arc(px,py,p.sz,0,Math.PI*2);hctx.fillStyle=`rgba(245,200,66,${p.al})`;hctx.fill();});requestAnimationFrame(t2=>drwH(t2*.001));}
+drwH(0);
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// NAV
+function goHome(){sessionStorage.setItem('sphere-from','esfera');}
+
+// NOVA
+const CONTEXT='esfera';
+const SUGS_ESFERA=['¿Cuánto mide la Sphere?','¿Cómo funciona la pantalla 16K?','¿Cuándo fue inaugurada?','¿Qué son los efectos 4D?','¿Cuánto costó construirla?'];
+const KB={
+  'dimension':'La Sphere tiene 112 metros de altura y 157 metros de diámetro. Es la arena de entretenimiento más grande del mundo.',
+  'altura':'La Sphere tiene 112 metros de altura y 157 metros de diámetro.',
+  'tamano':'La Sphere tiene 112m de altura y 157m de diámetro. Su forma esférica maximiza la superficie de pantalla visible desde cualquier punto.',
+  'pantalla':'La pantalla LED interior tiene más de 15,000 m² y resolución 16K × 16K, superando los 250 millones de píxeles. La tecnología LED logra saturación de color superior a cualquier pantalla convencional.',
+  'resolucion':'La pantalla de la Sphere tiene resolución 16K × 16K, más de 250 millones de píxeles en total. Es la pantalla LED más grande del mundo.',
+  'pixel':'Más de 250 millones de píxeles en la pantalla interior de la Sphere, con resolución 16K × 16K sobre más de 15,000 m².',
+  'inauguracion':'La Sphere fue inaugurada en septiembre de 2023 con los conciertos de U2 — UV Achtung Baby Live.',
+  'cuando':'La Sphere abrió en septiembre de 2023. La construcción comenzó en 2021.',
+  'costo':'La Sphere costó aproximadamente 2.3 mil millones de dólares, convirtiéndola en la arena más cara jamás construida.',
+  'precio':'El costo final de construcción de la Sphere fue aproximadamente 2.3 mil millones de dólares.',
+  'dinero':'La Sphere costó ~2.3 mil millones de dólares. Comenzó con un presupuesto de $1.2 mil millones en 2018.',
+  '4d':'Los efectos 4D incluyen asientos con retroalimentación háptica que vibran según la acción, sistemas de viento sincronizados con las imágenes, y vibraciones sísmicas. La experiencia se extiende del campo visual al cuerpo completo.',
+  'haptico':'Los asientos hápticos de la Sphere vibran en sincronía con lo que ocurre en pantalla, creando una experiencia física además de visual.',
+  'viento':'La Sphere tiene sistemas de viento integrados que crean corrientes de aire sincronizadas con el contenido proyectado.',
+  'audio':'El sistema de audio 3D surround hace que el sonido parezca venir de múltiples direcciones simultáneamente, sincronizado perfectamente con las imágenes.',
+  'sonido':'El audio 3D espacial de la Sphere emite sonido desde múltiples puntos del venue. No hay un solo "punto de sonido" — el audio rodea completamente al espectador.',
+  'tecnologia':'La Sphere usa pantallas LED 16K, audio 3D surround, efectos 4D (háptico, viento, vibración), AR y VR. Toda esta infraestructura no solo amplifica el arte — se convierte en parte de la obra misma.',
+  'exterior':'El exterior de la Sphere también tiene paneles LED, convirtiéndola en un hito visual del skyline de Las Vegas visible desde kilómetros.',
+  'arquitectura':'La Sphere fue diseñada por Populous. Su forma esférica no es solo estética — maximiza la superficie de pantalla visible desde cualquier asiento.',
+  'populous':'Populous es el estudio de arquitectura que diseñó la Sphere. Son especialistas en venues de entretenimiento y deportivos a nivel mundial.',
+  'msg':'MSG Entertainment es la empresa detrás de la Sphere. También son propietarios del Madison Square Garden en Nueva York.',
+  'capacidad':'La Sphere tiene capacidad para aproximadamente 17,500 a 20,000 personas dependiendo de la configuración del evento.',
+  'hola':'¡Hola! Estás en la sección de La Esfera. Puedo contarte sobre sus dimensiones, tecnología, pantalla, audio, historia de construcción o lo que quieras. ¿Qué te genera más curiosidad?',
+  'gracias':'¡Con gusto! Si tienes más preguntas sobre La Esfera, aquí estoy.',
+  'ar':'La Sphere integra realidad aumentada (AR) y realidad virtual (VR). Los espectadores no solo observan — experimentan realidades completamente nuevas.',
+};
+
+let open=false,init=false;
+function toggleNova(){open=!open;document.getElementById('nova-panel').classList.toggle('closed',!open);if(open&&!init){init=true;setTimeout(()=>{addM('n','¡Bienvenido a La Esfera! 🌐 Estoy aquí para contarte todo sobre esta estructura revolucionaria. ¿Qué te genera más curiosidad?');setTimeout(()=>addS(SUGS_ESFERA),500);},280);}}
+function nrm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'');}
+function getR(q){const nq=nrm(q);let best=null,bl=0;for(const[k,v]of Object.entries(KB)){const nk=nrm(k);if(nq.includes(nk)&&nk.length>bl){best=v;bl=nk.length;}}return best;}
+function addM(t,txt){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.className='m '+t;d.innerHTML=`<div class="mb">${txt}</div>`;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function addS(ss){const m=document.getElementById('pmsgs');const w=document.createElement('div');w.className='m n';const i=document.createElement('div');i.className='sugs';ss.forEach(s=>{const b=document.createElement('button');b.className='sg';b.textContent=s;b.onclick=()=>{w.remove();sw(s);};i.appendChild(b);});w.appendChild(i);m.appendChild(w);m.scrollTop=m.scrollHeight;}
+function showT(){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.id='typ';d.className='m n';d.innerHTML='<div class="typ-w"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function rmT(){const t=document.getElementById('typ');if(t)t.remove();}
+function sw(txt){addM('u',txt);showT();setTimeout(()=>{rmT();const r=getR(txt);if(r){addM('n',r);}else{addM('n','Eso aún no lo tengo en mis archivos 🤔 — pero puedes preguntarme algo así:');setTimeout(()=>addS(SUGS_ESFERA.slice(0,3)),300);}},620+Math.random()*380);}
+function snd(){const i=document.getElementById('pi');const t=i.value.trim();if(!t)return;i.value='';sw(t);}
+</script>
+</body>
+</html>
