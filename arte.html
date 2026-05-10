@@ -50,10 +50,15 @@
     .panel{display:none;animation:fadeUp .5s ease}
     .panel.visible{display:block}
 
+    /* SHARED IMAGE STYLES */
+    .h-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+    .h-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.5) 100%)}
+    .img-block{border-radius:16px;overflow:hidden;margin:20px 0}
+    .img-block img{width:100%;height:260px;object-fit:cover;display:block;border-radius:16px}
+    .img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:7px;font-style:italic}
+
     /* RAIN ROOM */
-    .rain-hero{position:relative;border-radius:22px;overflow:hidden;min-height:320px;display:flex;align-items:flex-end;margin-bottom:40px}
-    .rain-bg{position:absolute;inset:0;background:linear-gradient(135deg,#010c18,#030f22,#020810)}
-    .rain-container{position:absolute;inset:0;overflow:hidden}
+    .rain-hero{position:relative;border-radius:22px;overflow:hidden;min-height:360px;display:flex;align-items:flex-end;margin-bottom:40px}
     .rdrop{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(80,170,255,.65));animation:rfal linear infinite}
     @keyframes rfal{from{transform:translateY(-20px);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(400px);opacity:0}}
     .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);animation:scan 3s linear infinite;pointer-events:none}
@@ -175,8 +180,8 @@
   <section id="s-rain" class="panel visible">
     <div class="sec-wrap">
       <div class="rain-hero rv">
-        <div class="rain-bg"></div>
-        <div class="rain-container" id="rain-c"></div>
+        <img src="rain1.jpg" alt="Rain Room — dos visitantes en la instalación" class="h-img" />
+        <div class="h-ov"></div>
         <div class="scan"></div>
         <div class="rain-info">
           <div class="rain-title">Rain Room</div>
@@ -198,6 +203,10 @@
           </div>
         </div>
         <div>
+          <div class="img-block">
+            <img src="rain2.jpg" alt="Rain Room — vista cenital de visitantes bajo la lluvia" />
+            <div class="img-caption">Vista cenital · visitantes permanecen secos bajo el sistema de tracking 3D</div>
+          </div>
           <div class="block-title bt-cyan">Análisis Sensorial</div>
           <p class="art-p"><strong>Paleta deliberadamente minimalista:</strong> negro, gris y blanco. El espacio oscuro amplifica la visibilidad de las gotas iluminadas. Psicológicamente, elimina distracciones y dirige toda la atención al movimiento del agua.</p>
           <p class="art-p"><strong>Ritmo constante:</strong> La caída ininterrumpida del agua genera atención total. Solo la entrada del visitante rompe ese ritmo. Estudios sobre sonido repetitivo demuestran cambios de estado emocional que conectan la física del agua con la psicología del espectador.</p>

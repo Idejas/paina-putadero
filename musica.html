@@ -46,8 +46,13 @@
     .panel{display:none;animation:fadeUp .5s ease}
     .panel.visible{display:block}
 
+    /* SHARED IMAGE */
+    .h-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+    .h-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 55%,rgba(0,0,0,.5) 100%)}
+    .img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:7px;font-style:italic}
+
     /* U2 HERO */
-    .u2-hero{position:relative;border-radius:22px;overflow:hidden;min-height:300px;display:flex;align-items:flex-end;margin-bottom:40px;background:linear-gradient(135deg,#130008,#280010,#150520)}
+    .u2-hero{position:relative;border-radius:22px;overflow:hidden;min-height:380px;display:flex;align-items:flex-end;margin-bottom:40px}
     .u2-lines{position:absolute;inset:0;overflow:hidden}
     .u2-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(255,79,107,.35),transparent);animation:sweep linear infinite}
     @keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
@@ -166,6 +171,8 @@
   <section id="s-u2" class="panel visible">
     <div class="sec-wrap">
       <div class="u2-hero rv">
+        <img src="u2-concert.jpg" alt="U2 — UV Achtung Baby Live en la Sphere, Las Vegas 2023" class="h-img" style="object-position:center 30%" />
+        <div class="h-ov"></div>
         <div class="u2-lines">
           <div class="u2-line" style="top:28%;width:200%;animation-duration:3.5s"></div>
           <div class="u2-line" style="top:55%;width:200%;animation-duration:5s;animation-delay:-1.5s"></div>
@@ -179,6 +186,7 @@
       <div class="mus-grid rv">
         <div>
           <div class="block-title bt-red">La Experiencia</div>
+          <p class="art-p" style="font-size:.75rem;color:rgba(255,255,255,.35);font-style:italic;margin-bottom:6px">↑ Vista interior de la Sphere durante UV Achtung Baby Live — la pantalla LED de 15,000 m² rodea completamente al público.</p>
           <p class="art-p"><strong>U2 no dio un concierto — construyó una máquina perceptual.</strong> El legendario Zoo TV Tour de los 90s, reimaginado para el venue más avanzado del mundo.</p>
           <p class="art-p">Múltiples pantallas simultáneas proyectan noticieros, anuncios, símbolos políticos y ruido visual. Iluminación de alta intensidad con contrastes extremos crea inestabilidad atmosférica. Guitarras con delay, distorsión controlada y capas de ambiente envuelven al espectador.</p>
           <div class="quote-r">"El escenario funciona como una máquina perceptual que reorganiza la atención del espectador. La simultaneidad de estímulos visuales fuerza al cerebro a fragmentar el foco, generando una sensación de hiperestimulación similar a navegar los medios contemporáneos."</div>
