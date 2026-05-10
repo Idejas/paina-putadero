@@ -142,6 +142,11 @@
     .psnd{width:34px;height:34px;border-radius:50%;background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.26);color:var(--neon-g);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.9rem;flex-shrink:0}
     .psnd:hover{background:rgba(0,255,136,.22)}
 
+    /* SHARED IMAGE STYLES */
+    .ext-img{border-radius:16px;overflow:hidden;margin:50px 0;box-shadow:0 20px 60px rgba(245,200,66,.1)}
+    .ext-img img{width:100%;height:auto;display:block;border-radius:16px}
+    .img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:12px;font-style:italic}
+
     @media(max-width:768px){.hero-inner,.about-grid,.specs-g{grid-template-columns:1fr}.tech-g{grid-template-columns:1fr 1fr}.hero{padding:40px 20px}.hero-sphere{order:-1}section{padding:60px 20px}.tl-item,.tl-item:nth-child(even){flex-direction:column}.tl-list::before{left:14px}.tl-dot-wrap{width:28px}#nova-panel{width:calc(100vw - 32px);right:16px}}
   </style>
 </head>
@@ -179,7 +184,13 @@
       </div>
     </div>
   </div>
-
+  <!-- EXTERIOR IMAGE -->
+  <div style="max-width:1100px;margin:0 auto;padding:0 40px">
+    <div class="ext-img rv">
+      <img src="sphere-exterior.jpg" alt="The Sphere — exterior view with LED panels illuminated at night, Las Vegas" />
+      <div class="img-caption">The Sphere · exterior nocturno con paneles LED activados | Las Vegas, 2023</div>
+    </div>
+  </div>
   <!-- ABOUT -->
   <section style="background:linear-gradient(180deg,var(--bg) 0%,#080818 50%,var(--bg) 100%)">
     <div class="sec-wrap">
