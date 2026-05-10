@@ -97,6 +97,10 @@
     .c-musica:hover { border-color: rgba(155,89,245,.5); box-shadow: 0 22px 55px rgba(155,89,245,.15); }
     .c-musica .card-title, .c-musica .card-cta { color: var(--purple); }
 
+    .c-alcance { background: linear-gradient(135deg,rgba(0,212,255,.05),rgba(0,35,60,.28)); border: 1px solid rgba(0,212,255,.14); }
+    .c-alcance:hover { border-color: rgba(0,212,255,.5); box-shadow: 0 22px 55px rgba(0,212,255,.12); }
+    .c-alcance .card-title, .c-alcance .card-cta { color: var(--cyan); }
+
     /* card visuals */
     .sph-mini { width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%,#fff8d0,#f5c842,#8a5c00); box-shadow: 0 0 28px rgba(245,200,66,.45); position: relative; }
     .sph-mini::after { content:''; position:absolute; inset:-12px; border-radius:50%; border:1px solid rgba(0,212,255,.35); animation: spin-ring 5s linear infinite; }
@@ -109,6 +113,11 @@
     .wave-mini { display:flex; align-items:center; gap:3px; height:60px; width:100px; }
     .wbar { flex:1; border-radius:3px; animation:wv ease-in-out infinite alternate; }
     @keyframes wv { from{transform:scaleY(.15)} to{transform:scaleY(1)} }
+
+    .alcance-mini { width:70px; height:70px; position:relative; background:radial-gradient(circle at 50% 30%, rgba(0,212,255,.4), rgba(0,212,255,.1)); border-radius:50%; overflow:hidden; }
+    .alcance-mini::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 50%, transparent 25%, rgba(0,212,255,.3) 100%); animation:pulse-rain 2s ease-in-out infinite; }
+    .alcance-mini::after { content:''; position:absolute; inset:0; border:2px solid rgba(0,212,255,.3); border-radius:50%; }
+    @keyframes pulse-rain { 0%{transform:scale(1);opacity:.6} 50%{transform:scale(1.2);opacity:.3} 100%{transform:scale(1);opacity:.6} }
 
     /* ── NOVA CHAT ── */
     #nova-fab { position:fixed; bottom:26px; right:26px; z-index:200; display:flex; align-items:center; gap:9px; padding:11px 17px; background:rgba(3,6,18,.93); border:1px solid rgba(0,255,136,.32); border-radius:40px; cursor:pointer; backdrop-filter:blur(20px); transition:all .3s; box-shadow:0 0 18px rgba(0,255,136,.1); }
@@ -180,7 +189,7 @@
       <div class="card-num">02 ·</div>
       <div class="card-visual"><div class="rain-mini" id="rain-mini"></div></div>
       <h2 class="card-title">Arte Inmersivo</h2>
-      <p class="card-desc">Rain Room y Postcard from Earth. Obras donde la ciencia se convierte en arte.</p>
+      <p class="card-desc">Postcard from Earth. Cuando el cine se convierte en un entorno completamente inmersivo.</p>
       <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
     </a>
     <a class="card c-musica" href="musica.html">
@@ -188,6 +197,13 @@
       <div class="card-visual"><div class="wave-mini" id="wave-mini"></div></div>
       <h2 class="card-title">Música</h2>
       <p class="card-desc">U2 y Backstreet Boys. Cuando el concierto se convierte en experiencia perceptual total.</p>
+      <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
+    </a>
+    <a class="card c-alcance" href="alcance.html">
+      <div class="card-num">04 ·</div>
+      <div class="card-visual"><div class="alcance-mini"></div></div>
+      <h2 class="card-title">Alcance Futuro</h2>
+      <p class="card-desc">Rain Room reimaginada. Especulación sobre cómo la tecnología transforma el arte a escala planetaria.</p>
       <span class="card-cta">Explorar <span class="cta-arr">→</span></span>
     </a>
   </div>

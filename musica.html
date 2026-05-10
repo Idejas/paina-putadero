@@ -138,6 +138,7 @@
     .psnd{width:34px;height:34px;border-radius:50%;background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.26);color:var(--neon-g);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.9rem;flex-shrink:0}
     .psnd:hover{background:rgba(0,255,136,.22)}
 
+    .img-block{border-radius:16px;overflow:hidden;margin:32px 0}.img-block img{width:100%;height:320px;object-fit:cover;display:block;border-radius:16px}.img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:7px;font-style:italic}
     @media(max-width:768px){.mus-grid{grid-template-columns:1fr}section{padding:50px 20px}.hero{padding:40px 20px}.tabs-wrap{padding:30px 20px 0}.tabs{flex-direction:column}#nova-panel{width:calc(100vw - 32px);right:16px}}
   </style>
 </head>
@@ -171,7 +172,7 @@
   <section id="s-u2" class="panel visible">
     <div class="sec-wrap">
       <div class="u2-hero rv">
-        <img src="u2-concert.jpg" alt="U2 — UV Achtung Baby Live en la Sphere, Las Vegas 2023" class="h-img" style="object-position:center 30%" />
+        <img src="images/u21.jpg" alt="U2 — UV Achtung Baby Live en la Sphere, Las Vegas 2023" class="h-img" style="object-position:center 30%" />
         <div class="h-ov"></div>
         <div class="u2-lines">
           <div class="u2-line" style="top:28%;width:200%;animation-duration:3.5s"></div>
@@ -210,6 +211,10 @@
           <div class="bar-wrap"><div class="bar-lbl"><span>Complejidad Narrativa</span><span>88%</span></div><div class="bar-track"><div class="bar-fill bf-red" data-w="88"></div></div></div>
         </div>
       </div>
+      <div class="img-block rv">
+        <img src="images/u211.jpg" alt="U2 UV Achtung Baby Live — saturación visual y crítica mediática en la Sphere" />
+        <div class="img-caption">U2 · UV Achtung Baby Live | múltiples pantallas simultáneas, ruido visual y saturación sensorial total</div>
+      </div>
     </div>
   </section>
 
@@ -217,7 +222,9 @@
   <section id="s-bsb" class="panel">
     <div class="sec-wrap">
       <div class="bsb-hero rv">
-        <div class="bsb-waves" id="bsb-waves"></div>
+        <img src="images/backstreet_boys.jpg" alt="Backstreet Boys — DNA World Tour en la Sphere" class="h-img" style="object-position:center 35%" />
+        <div class="h-ov"></div>
+        <div class="bsb-waves" id="bsb-waves" style="opacity:.4"></div>
         <div class="bsb-info">
           <div class="bsb-title">The DNA World Tour</div>
           <div class="bsb-sub">Backstreet Boys · MSG Sphere, Las Vegas</div>
@@ -250,6 +257,10 @@
           <div class="bar-wrap"><div class="bar-lbl"><span>Conexión Emocional</span><span>91%</span></div><div class="bar-track"><div class="bar-fill bf-purple" data-w="91"></div></div></div>
         </div>
       </div>
+      <div class="img-block rv">
+        <img src="images/backstreet_boys2.jpg" alt="Backstreet Boys — coreografías sincronizadas en la pantalla 16K de la Sphere" />
+        <div class="img-caption">Backstreet Boys · DNA World Tour | armonías vocales y coreografías que activan memoria y placer auditivo</div>
+      </div>
     </div>
   </section>
 
@@ -270,6 +281,7 @@
         <a class="bn-card bn-home" href="index.html" onclick="goHome()">← Inicio</a>
         <a class="bn-card bn-esfera" href="esfera.html">◉ La Esfera →</a>
         <a class="bn-card bn-arte" href="arte.html">✦ Arte Inmersivo →</a>
+        <a class="bn-card bn-alcance" href="alcance.html">◐ Alcance Futuro →</a>
       </div>
     </div>
   </div>

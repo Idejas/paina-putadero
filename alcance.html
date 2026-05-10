@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arte Inmersivo · The Sphere</title>
+  <title>Alcance Futuro · The Sphere</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -24,7 +24,6 @@
     main{position:relative;z-index:1;padding-top:70px}
     .deco{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);opacity:.1}
 
-    /* HERO */
     .hero{min-height:70vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px 40px;background:linear-gradient(180deg,rgba(0,30,50,.5) 0%,var(--bg) 100%)}
     .hero-inner{text-align:center;max-width:750px;position:relative;z-index:1}
     .badge{font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--cyan);display:block;margin-bottom:16px;animation:fadeUp .7s ease .2s both}
@@ -33,74 +32,44 @@
     .hero h1 span{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .hero p{font-size:.97rem;line-height:1.82;color:rgba(255,255,255,.58);animation:fadeUp .7s ease .5s both}
 
-    /* TABS */
-    .tabs-wrap{display:flex;justify-content:center;padding:40px 40px 0}
-    .tabs{display:flex;border:1px solid var(--gb);border-radius:14px;overflow:hidden;max-width:500px;width:100%}
-    .tab{flex:1;padding:13px 18px;text-align:center;cursor:pointer;font-size:.8rem;font-weight:600;letter-spacing:.07em;color:rgba(255,255,255,.38);transition:all .3s;border:none;background:transparent;font-family:'Raleway',sans-serif}
-    .tab.a-post{background:rgba(155,89,245,.1);color:var(--purple)}
-    .tab:not(.a-post):hover{color:rgba(255,255,255,.65)}
-
     section{position:relative;z-index:1;padding:70px 40px}
     .sec-wrap{max-width:1100px;margin:0 auto}
     .rv{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
     .rv.vis{opacity:1;transform:translateY(0)}
 
-    /* PANEL */
-    .panel{display:none;animation:fadeUp .5s ease}
-    .panel.visible{display:block}
-
-    /* SHARED IMAGE STYLES */
     .h-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
     .h-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.5) 100%)}
-    .img-block{border-radius:16px;overflow:hidden;margin:20px 0}
-    .img-block img{width:100%;height:260px;object-fit:cover;display:block;border-radius:16px}
-    .img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:7px;font-style:italic}
 
-    /* RAIN ROOM */
     .rain-hero{position:relative;border-radius:22px;overflow:hidden;min-height:360px;display:flex;align-items:flex-end;margin-bottom:40px}
-    .rdrop{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(80,170,255,.65));animation:rfal linear infinite}
-    @keyframes rfal{from{transform:translateY(-20px);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateY(400px);opacity:0}}
     .scan{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent);animation:scan 3s linear infinite;pointer-events:none}
     @keyframes scan{0%{top:0}100%{top:100%}}
     .rain-info{position:relative;z-index:2;padding:36px 40px;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 100%);width:100%}
     .rain-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;color:var(--cyan);margin-bottom:6px}
     .rain-artist{font-size:.72rem;color:rgba(255,255,255,.42);letter-spacing:.22em;text-transform:uppercase}
 
-    /* POSTCARD HERO */
-    .post-hero{position:relative;border-radius:22px;overflow:hidden;min-height:320px;display:flex;align-items:flex-end;margin-bottom:40px;background:linear-gradient(135deg,#08031a,#180530,#200810)}
-    .post-canvas-wrap{position:absolute;inset:0}
-    .post-info{position:relative;z-index:2;padding:36px 40px;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,transparent 100%);width:100%}
-    .post-title{font-family:'Orbitron',sans-serif;font-size:1.7rem;color:var(--purple);margin-bottom:6px;line-height:1.2}
-    .post-artist{font-size:.72rem;color:rgba(255,255,255,.42);letter-spacing:.22em;text-transform:uppercase}
-
-    /* CONTENT GRID */
     .art-grid{display:grid;grid-template-columns:1fr 1fr;gap:42px}
     .block-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid}
     .bt-cyan{color:var(--cyan);border-color:rgba(0,212,255,.28)}
-    .bt-purple{color:var(--purple);border-color:rgba(155,89,245,.28)}
     .art-p{font-size:.9rem;line-height:1.85;color:rgba(255,255,255,.62);margin-bottom:14px}
     .art-p strong{color:#fff;font-weight:600}
 
-    .quote{padding:14px 18px;margin:18px 0;font-style:italic;font-size:.87rem;line-height:1.72;color:rgba(255,255,255,.68);border-radius:0 12px 12px 0}
-    .q-cyan{border-left:3px solid var(--cyan);background:rgba(0,212,255,.05)}
-    .q-purple{border-left:3px solid var(--purple);background:rgba(155,89,245,.05)}
+    .quote{padding:14px 18px;margin:18px 0;font-style:italic;font-size:.87rem;line-height:1.72;color:rgba(255,255,255,.68);border-radius:0 12px 12px 0;border-left:3px solid var(--cyan);background:rgba(0,212,255,.05)}
 
     .pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
     .pill{padding:5px 12px;border-radius:20px;font-size:.73rem;font-weight:600}
     .pi-cyan{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.28);color:var(--cyan)}
-    .pi-purple{background:rgba(155,89,245,.1);border:1px solid rgba(155,89,245,.28);color:var(--purple)}
     .pi-gray{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55)}
 
-    .data{border-radius:14px;padding:18px;margin-top:20px}
-    .d-cyan{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.18)}
-    .d-purple{background:rgba(155,89,245,.04);border:1px solid rgba(155,89,245,.18)}
+    .data{border-radius:14px;padding:18px;margin-top:20px;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.18)}
     .di{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.81rem}
     .di:last-child{border-bottom:none}
     .dk{color:rgba(255,255,255,.42)}
     .dv-c{color:var(--cyan);font-weight:600}
-    .dv-p{color:var(--purple);font-weight:600}
 
-    /* BOTTOM NAV */
+    .img-block{border-radius:16px;overflow:hidden;margin:28px 0}
+    .img-block img{width:100%;height:300px;object-fit:cover;display:block;border-radius:16px}
+    .img-caption{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-align:center;margin-top:7px;font-style:italic}
+
     .bottom-nav{background:linear-gradient(180deg,var(--bg),#08051a);padding:80px 40px}
     .bn-inner{max-width:900px;margin:0 auto;text-align:center}
     .bn-title{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:.2em;color:var(--cyan);margin-bottom:10px}
@@ -111,10 +80,11 @@
     .bn-home:hover{border-color:rgba(255,255,255,.25);color:#fff}
     .bn-esfera{border:1px solid rgba(245,200,66,.22);color:var(--gold);background:rgba(245,200,66,.05)}
     .bn-esfera:hover{border-color:rgba(245,200,66,.5);box-shadow:0 0 18px rgba(245,200,66,.14);transform:translateY(-3px)}
+    .bn-arte{border:1px solid rgba(0,212,255,.22);color:var(--cyan);background:rgba(0,212,255,.05)}
+    .bn-arte:hover{border-color:rgba(0,212,255,.5);box-shadow:0 0 18px rgba(0,212,255,.14);transform:translateY(-3px)}
     .bn-musica{border:1px solid rgba(155,89,245,.22);color:var(--purple);background:rgba(155,89,245,.05)}
     .bn-musica:hover{border-color:rgba(155,89,245,.5);box-shadow:0 0 18px rgba(155,89,245,.14);transform:translateY(-3px)}
 
-    /* NOVA */
     #nova-fab{position:fixed;bottom:26px;right:26px;z-index:200;display:flex;align-items:center;gap:9px;padding:11px 17px;background:rgba(3,6,18,.93);border:1px solid rgba(0,255,136,.32);border-radius:40px;cursor:pointer;backdrop-filter:blur(20px);transition:all .3s}
     #nova-fab:hover{border-color:rgba(0,255,136,.6);transform:translateY(-2px)}
     .forb{width:8px;height:8px;border-radius:50%;background:var(--neon-g);animation:porb 1.5s infinite}
@@ -146,14 +116,14 @@
     .psnd{width:34px;height:34px;border-radius:50%;background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.26);color:var(--neon-g);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:.9rem;flex-shrink:0}
     .psnd:hover{background:rgba(0,255,136,.22)}
 
-    @media(max-width:768px){.art-grid{grid-template-columns:1fr}section{padding:50px 20px}.hero{padding:40px 20px}.tabs-wrap{padding:30px 20px 0}#nova-panel{width:calc(100vw - 32px);right:16px}}
+    @media(max-width:768px){.art-grid{grid-template-columns:1fr}section{padding:50px 20px}.hero{padding:40px 20px}#nova-panel{width:calc(100vw - 32px);right:16px}}
   </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
 <nav>
   <a class="back-btn" href="index.html" onclick="goHome()"><span class="back-arr">←</span> Inicio</a>
-  <div class="nav-title">ARTE INMERSIVO</div>
+  <div class="nav-title">ALCANCE FUTURO</div>
   <button class="nav-nova" onclick="toggleNova()"><span class="nn-orb"></span>NOVA</button>
 </nav>
 
@@ -162,55 +132,73 @@
     <div class="deco" style="width:450px;height:450px;background:var(--cyan);top:-10%;left:-8%"></div>
     <div class="deco" style="width:350px;height:350px;background:var(--purple);bottom:5%;right:-5%"></div>
     <div class="hero-inner">
-      <span class="badge">The Sphere · Las Vegas · 2023</span>
-      <h1>Cuando la tecnología <span>se convierte en arte</span></h1>
-      <p>Una experiencia cinematográfica diseñada específicamente para la esfera. El director Darren Aronofsky crea un viaje inmersivo que redefinió lo que es posible en cine envolvente.</p>
+      <span class="badge">The Sphere · Especulación Técnico-Artística</span>
+      <h1>Rain Room: Una instalación <span>reimaginada a escala planetaria</span></h1>
+      <p>¿Qué ocurriría si trasladáramos la icónica instalación de Random International a un espacio de 170 metros de altura? Exploramos cómo la tecnología y el arte convergen en un futuro posible.</p>
     </div>
   </div>
 
-  <!-- POSTCARD FROM EARTH -->
-  <section id="s-post" class="panel visible">
+  <section>
     <div class="sec-wrap">
-      <div class="post-hero rv">
-        <img src="images/PostcardfromEarth1.jpg" alt="Postcard from Earth — Darren Aronofsky, MSG Sphere 2023" class="h-img" />
+      <div class="rain-hero rv">
+        <img src="images/rainroom_1.jpg" alt="Rain Room — instalación de lluvia controlada por IA" class="h-img" />
         <div class="h-ov"></div>
-        <div class="post-canvas-wrap" style="mix-blend-mode:screen;opacity:.3"><canvas id="post-canvas"></canvas></div>
-        <div class="post-info">
-          <div class="post-title">Postcard from Earth</div>
-          <div class="post-artist">Darren Aronofsky · 2023 · MSG Sphere, Las Vegas</div>
+        <div class="scan"></div>
+        <div class="rain-info">
+          <div class="rain-title">Rain Room en la Sphere</div>
+          <div class="rain-artist">Potencial Futuro · Random International + MSG Sphere</div>
         </div>
       </div>
       <div class="art-grid rv">
         <div>
-          <div class="block-title bt-purple">La Obra</div>
-          <p class="art-p"><strong>Un viaje de 50 minutos a través de los paisajes del planeta.</strong> Océanos, desiertos, selvas, ecosistemas — los espectadores no los observan, los <em>habitan</em>.</p>
-          <p class="art-p"><strong>Darren Aronofsky</strong> (Requiem for a Dream, Black Swan, The Whale) diseñó esta obra específicamente para la Sphere en 2023. Es el primer gran director en crear contenido nativo para este formato. La narrativa: astronautas que regresan a la Tierra para rememorar su grandeza.</p>
-          <p class="art-p">La pantalla de <strong>16K × 16K</strong> y más de <strong>15,000 m²</strong> cubre completamente el campo visual. Los límites del cine tradicional desaparecen — no hay marco, no hay pantalla: solo entorno.</p>
-          <div class="quote q-purple">"La escena está organizada para que el espectador no contemple — habite. Paisajes como cañones y montañas ocupan todo el campo visual, creando inmersión donde cada elemento dirige la atención y genera impacto."</div>
+          <div class="block-title bt-cyan">Rain Room: La Obra Original</div>
+          <p class="art-p"><strong>Entras a un espacio donde llueve constantemente. No te mojas.</strong> Esa contradicción es el corazón de Rain Room.</p>
+          <p class="art-p">El colectivo londinense <strong>Random International</strong>, fundado en 2005 por Hannes Koch y Florian Ortkrass, creó esta instalación en 2012. Ha sido exhibida en el Barbican (Londres), MoMA (Nueva York), LACMA (Los Ángeles), Shanghái y Riad — pero <strong>nunca dentro de un espacio de la escala de la Sphere</strong>.</p>
+          <div class="quote">"La lluvia tecnológicamente controlada permite experimentar directamente la interferencia humana en los entornos naturales. Se crea una distancia sensorial que habilita la reflexión."</div>
+          <p class="art-p">Cámaras de seguimiento tridimensional identifican la posición exacta de cada visitante. El software detiene el flujo de agua en un radio de <strong>1.80 metros</strong> alrededor de cada persona. Aproximadamente <strong>2,500 litros de agua reciclada</strong> circulan continuamente.</p>
           <div class="pills">
-            <span class="pill pi-purple">Visual: 360° hiperreal</span>
-            <span class="pill pi-purple">Audio: 3D espacial</span>
-            <span class="pill pi-purple">Táctil: asientos hápticos</span>
-            <span class="pill pi-gray">Duración: ~50 min</span>
+            <span class="pill pi-cyan">Visual: negro, gris, blanco</span>
+            <span class="pill pi-cyan">Sonido: lluvia envolvente</span>
+            <span class="pill pi-cyan">Olfato: humedad artificial</span>
+            <span class="pill pi-gray">Táctil: ausencia (el punto)</span>
           </div>
         </div>
         <div>
-          <div class="block-title bt-purple">Análisis Técnico-Artístico</div>
-          <p class="art-p"><strong>Composición:</strong> Abre con ciencia ficción guiando la narrativa. Ocasionales voice-overs evitan sobrecargar lo visual, permitiendo que la imagen de la Tierra como "sinfonía magnífica congelada en el tiempo" ocupe el centro.</p>
-          <p class="art-p"><strong>Movimiento:</strong> Transiciones fluidas y desplazamientos de cámara refuerzan la sensación de viaje. Paneos amplios, barridos horizontales, zoom-ins progresivos. Sin cortes abruptos — continuidad visual total.</p>
-          <p class="art-p"><strong>Escala:</strong> Dimensiones monumentales intensifican la experiencia. Los efectos 4D —vibraciones, viento— expanden la escala más allá de lo visual hacia lo corporal. El espectador no está sentado viendo — está <em>adentro</em>.</p>
-          <div class="data d-purple">
-            <div class="di"><span class="dk">Resolución</span><span class="dv-p">16K × 16K</span></div>
-            <div class="di"><span class="dk">Píxeles totales</span><span class="dv-p">>250 millones</span></div>
-            <div class="di"><span class="dk">Superficie de pantalla</span><span class="dv-p">>15,000 m²</span></div>
-            <div class="di"><span class="dk">Efectos físicos</span><span class="dv-p">Háptico, viento, vibración</span></div>
-            <div class="di"><span class="dk">Duración</span><span class="dv-p">~50 minutos</span></div>
+          <div class="block-title bt-cyan">Por Qué Funcionaría en la Sphere</div>
+          <p class="art-p"><strong>Escala multiplicada:</strong> En el Barbican, Rain Room ocupaba ~100 m². La Sphere tiene una altura interior de 170 metros. Imagina lluvia cayendo desde 170 metros de altura, controlada perfectamente en tiempo real. Cada visitante con su propia "zona de calma" mientras la lluvia cae a su alrededor.</p>
+          <p class="art-p"><strong>Inmersión sin límites visuales:</strong> El espacio actual de Rain Room tiene un horizonte visible. En la Sphere esférica, no hay horizontes — solo el espacio envolvente. La lluvia caería en todas direcciones percibidas, multiplicando la contradicción sensorial.</p>
+          <p class="art-p"><strong>Múltiples visitantes simultáneamente:</strong> Las instalaciones actuales de Rain Room permiten ~5-10 personas. La Sphere podría acoger cientos, cada uno con su zona de protección, interactuando sin verse directamente — solo a través del reflejo en el agua que cae alrededor.</p>
+          <div class="data">
+            <div class="di"><span class="dk">Altura interior de la Sphere</span><span class="dv-c">170 metros</span></div>
+            <div class="di"><span class="dk">Diámetro interior</span><span class="dv-c">157 metros</span></div>
+            <div class="di"><span class="dk">Comparativa de escala</span><span class="dv-c">~1,700 veces más volumen</span></div>
+            <div class="di"><span class="dk">Visitantes simultáneos posibles</span><span class="dv-c">250-500</span></div>
+            <div class="di"><span class="dk">Zona seca por persona</span><span class="dv-c">1.80m radio (escalable)</span></div>
           </div>
         </div>
       </div>
-      <div class="img-block rv" style="margin-top:40px">
-        <img src="images/PostcardfromEarth2.jpg" alt="Postcard from Earth — escenas de los ecosistemas del planeta proyectadas en 16K" />
-        <div class="img-caption">Postcard from Earth · los paisajes del planeta habitados desde dentro — pantalla 16K, más de 250 millones de píxeles</div>
+      <div class="img-block rv">
+        <img src="images/rainroom1.jpg" alt="Rain Room — instalación de lluvia controlada por sensores 3D" />
+        <div class="img-caption">Rain Room · Random International | caminas bajo la lluvia, no te mojas — sensores 3D detectan tu posición en tiempo real</div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(0,212,255,.18); padding-top: 60px; margin-top: 60px;">
+        <div class="art-grid rv">
+          <div>
+            <div class="block-title bt-cyan">Desafíos Técnicos (y Soluciones)</div>
+            <p class="art-p"><strong>Sistema de tracking 3D a escala:</strong> Rain Room actual usa ~4-6 cámaras. La Sphere podría usar una red de <strong>32-64 cámaras 3D</strong> con IA para mapear simultáneamente cientos de personas, cada una en su propia "matriz de control de agua".</p>
+            <p class="art-p"><strong>Distribución de agua:</strong> 2,500 litros/hora actuales. La Sphere necesitaría un sistema escalable de <strong>10,000-15,000 litros/hora</strong> con recuperación mediante drenaje hemisférico integrado en la estructura.</p>
+            <p class="art-p"><strong>Latencia cero:</strong> El sistema debe responder en <strong>&lt;100ms</strong> para que la experiencia sea creíble. Con IA de borde (edge computing) ejecutándose en tiempo real, la latencia podría minimizarse a <strong>40-60ms</strong>.</p>
+            <p class="art-p"><strong>Iluminación integrada:</strong> La lluvia es visible porque la iluminan. Proyectores LED dentro del sistema de agua podrían crear efectos visuales donde cada gota se ilumina según su posición — generando patrones dinámicos imposibles en instalaciones actuales.</p>
+          </div>
+          <div>
+            <div class="block-title bt-cyan">La Experiencia Transformada</div>
+            <p class="art-p"><strong>Del silencio vigilado al caos controlado:</strong> En Rain Room actual, el silencio es cómplice del asombro. En la Sphere, podrían coexistir cientos de personas, cada una ignorante de las demás, en un espacio donde la lluvia cae alrededor pero no encima. La soledad compartida se convierte en meditación colectiva.</p>
+            <p class="art-p"><strong>Narrativa emergente:</strong> Random International podría añadir capas narrativas: proyecciones visuales en la lluvia, cambios de densidad de agua según interacciones, incluso narrativas de audio 3D que describan el fenómeno desde perspectivas filosóficas diferentes.</p>
+            <p class="art-p"><strong>Reflexión ambiental amplificada:</strong> El trabajo original plantea nuestra desconexión de la naturaleza. En la Sphere, al ser cientos de personas protegiéndose simultáneamente de la lluvia, la obra escala su crítica: ¿cuántos de nosotros podemos protegernos antes de que el sistema falle?</p>
+            <div class="quote">"No es solo que te protejas de la lluvia — es que cientos de otros también están protegiéndose. ¿Eso es comunidad o es aislamiento extremo?"</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -222,8 +210,8 @@
       <div class="bn-cards">
         <a class="bn-card bn-home" href="index.html" onclick="goHome()">← Inicio</a>
         <a class="bn-card bn-esfera" href="esfera.html">◉ La Esfera →</a>
+        <a class="bn-card bn-arte" href="arte.html">✦ Arte Inmersivo →</a>
         <a class="bn-card bn-musica" href="musica.html">♫ Música →</a>
-        <a class="bn-card bn-alcance" href="alcance.html">◐ Alcance Futuro →</a>
       </div>
     </div>
   </div>
@@ -231,56 +219,45 @@
 
 <div id="nova-fab" onclick="toggleNova()"><span class="forb"></span><span class="ftxt">ASK NOVA</span></div>
 <div id="nova-panel" class="closed">
-  <div class="ph"><div class="p-orb"></div><div><div class="pn">NOVA</div><div class="ps">Sección: Arte Inmersivo</div></div><button class="pcl" onclick="toggleNova()">✕</button></div>
+  <div class="ph"><div class="p-orb"></div><div><div class="pn">NOVA</div><div class="ps">Sección: Alcance Futuro</div></div><button class="pcl" onclick="toggleNova()">✕</button></div>
   <div class="pmsgs" id="pmsgs"></div>
-  <div class="pinp"><input class="pi-i" id="pi" placeholder="Pregunta sobre el arte inmersivo..." onkeydown="if(event.key==='Enter')snd()" /><button class="psnd" onclick="snd()">↑</button></div>
+  <div class="pinp"><input class="pi-i" id="pi" placeholder="Pregunta sobre el alcance futuro..." onkeydown="if(event.key==='Enter')snd()" /><button class="psnd" onclick="snd()">↑</button></div>
 </div>
 
 <script>
 // STARS
 const sc=document.getElementById('stars'),sctx=sc.getContext('2d');let stars=[];function rsz(){sc.width=innerWidth;sc.height=innerHeight;}rsz();window.addEventListener('resize',rsz);for(let i=0;i<200;i++)stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.4+.2,a:Math.random()*.6+.2,s:Math.random()*.0004+.0001});(function ds(){sctx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.a+=Math.sin(Date.now()*s.s)*.005;s.a=Math.max(.1,Math.min(.8,s.a));sctx.beginPath();sctx.arc(s.x*sc.width,s.y*sc.height,s.r,0,Math.PI*2);sctx.fillStyle=`rgba(255,255,255,${s.a})`;sctx.fill();});requestAnimationFrame(ds);})();
 
-// RAIN
-(()=>{const c=document.getElementById('rain-c');if(!c)return;for(let i=0;i<90;i++){const d=document.createElement('div');d.className='rdrop';d.style.left=Math.random()*100+'%';d.style.height=(8+Math.random()*18)+'px';d.style.animationDuration=(.3+Math.random()*.55)+'s';d.style.animationDelay=(Math.random()*2.5)+'s';d.style.opacity=.3+Math.random()*.55;c.appendChild(d);}})();
-
-// POSTCARD CANVAS
-(()=>{const wrap=document.querySelector('.post-canvas-wrap');if(!wrap)return;const canvas=document.createElement('canvas');canvas.style.cssText='width:100%;height:100%;position:absolute;inset:0';wrap.appendChild(canvas);function sz(){canvas.width=wrap.offsetWidth||1000;canvas.height=wrap.offsetHeight||320;}sz();const ctx=canvas.getContext('2d');const orbs=[{x:.12,y:.35,r:160,c:'#180535',a:.85},{x:.55,y:.25,r:220,c:'#280a10',a:.7},{x:.88,y:.65,r:130,c:'#0a1540',a:.6},{x:.35,y:.8,r:180,c:'#0a0535',a:.5}];function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);orbs.forEach(o=>{const g=ctx.createRadialGradient(o.x*canvas.width,o.y*canvas.height,0,o.x*canvas.width,o.y*canvas.height,o.r);g.addColorStop(0,o.c);g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(o.x*canvas.width,o.y*canvas.height,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.globalAlpha=o.a;ctx.fill();ctx.globalAlpha=1;});for(let i=0;i<130;i++){ctx.beginPath();ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height,Math.random()*1.5,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${Math.random()*.55+.1})`;ctx.fill();}}draw();window.addEventListener('resize',()=>{sz();draw();});})();
-
-// TABS
-function sw(which){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('visible'));document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('a-post');});document.getElementById('s-'+which).classList.add('visible');if(which==='post'){document.getElementById('t-post').classList.add('a-post');}document.querySelectorAll('.rv').forEach(el=>el.classList.add('vis'));}
-
 // REVEAL
 const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
 // NAV
-function goHome(){sessionStorage.setItem('sphere-from','arte');}
+function goHome(){sessionStorage.setItem('sphere-from','alcance');}
 
 // NOVA
-const SUGS_ARTE=['¿Qué es Postcard from Earth?','¿Quién es Darren Aronofsky?','¿Cuál es la escala de la Sphere?','¿Qué se siente ver Postcard from Earth?','¿Cuánto dura la experiencia?'];
+const SUGS_ALCANCE=['¿Qué es Rain Room?','¿Por qué funcionaría en la Sphere?','¿Cómo es la escala?','¿Quién es Random International?','¿Cuál es el desafío técnico?'];
 const KB={
-  'postcard':'Postcard from Earth de Darren Aronofsky es un viaje inmersivo de ~50 minutos por paisajes planetarios. La pantalla 16K de la Sphere te rodea completamente, eliminando los límites del cine tradicional.',
-  'aronofsky':'Darren Aronofsky (1969) es el director de Requiem for a Dream, Black Swan y The Whale. Postcard from Earth fue diseñada específicamente para la Sphere — su primera obra creada para formato inmersivo.',
-  'que se siente':'Los espectadores describen sentirse físicamente presentes en los paisajes. La pantalla 360° de 16K y los efectos 4D (viento, vibración en asientos) crean una inmersión que el cine convencional no puede replicar.',
-  'duracion':'Postcard from Earth dura aproximadamente 50 minutos. Es un viaje guiado por astronautas que regresan a la Tierra y recorren sus ecosistemas más impresionantes.',
-  'colores':'Postcard from Earth usa colores intensos que la tecnología 16K amplifica con saturación superior a pantallas convencionales. La escala monumental intensifica cada detalle visual.',
-  'escala sphere':'La Sphere tiene 157 metros de diámetro interior y 170 metros de altura. Contiene ~1,700 veces más volumen que instalaciones artísticas convencionales. Podría alojar 250-500 visitantes simultáneamente.',
-  'resolution':'La pantalla tiene resolución 16K × 16K, con más de 250 millones de píxeles totales. La superficie de pantalla supera los 15,000 m². Junto con efectos físicos (háptico, viento, vibración), crea inmersión total.',
-  'composicion':'Abre con ciencia ficción guiando la narrativa. Ocasionales voice-overs evitan sobrecargar lo visual, permitiendo que la imagen de la Tierra ocupe el centro como "sinfonía magnífica congelada en el tiempo".',
-  'movimiento':'Transiciones fluidas y desplazamientos de cámara refuerzan la sensación de viaje. Paneos amplios, barridos horizontales, zoom-ins progresivos. Sin cortes abruptos — continuidad visual total.',
-  'hola':'¡Hola! Estás en la sección de Arte Inmersivo. Aquí puedo contarte todo sobre Postcard from Earth, la experiencia cinematográfica de Darren Aronofsky en la Sphere. ¿Qué te gustaría saber?',
+  'rain room':'Rain Room de Random International es una instalación donde caminas bajo la lluvia sin mojarte. Cámaras 3D rastrean tu posición y detienen el agua en 1.80m de radio. Usa ~2,500 litros de agua reciclada en un espacio de ~100 m².',
+  'por que funcionaria':'En la Sphere, Rain Room escalaría dramáticamente. Con 170m de altura y capacidad para cientos de personas, cada una tendría su "zona seca". Requeriría 32-64 cámaras 3D con IA en tiempo real. La latencia debe ser <100ms.',
+  'escala':'La Sphere tiene 157m de diámetro y 170m de altura. Rain Room actual es ~100 m². La Sphere contiene ~1,700 veces más volumen. Podría alojar 250-500 visitantes simultáneamente.',
+  'random international':'Random International es un colectivo de arte con sede en Londres, fundado en 2005 por Hannes Koch y Florian Ortkrass. Sus obras se han exhibido en Barbican, MoMA, LACMA, Shanghái y Riad.',
+  'desafio tecnico':'Sistema de tracking 3D escalado (32-64 cámaras), distribución de agua (10,000-15,000 litros/hora), latencia <100ms con edge computing, e iluminación LED integrada en el sistema de agua.',
+  'experiencia':'Soledad compartida entre cientos de personas bajo lluvia controlada. La reflexión sobre naturaleza y tecnología se amplifica. Audio 3D narrativo añade capas filosóficas. Un cambio de percepción colectiva.',
+  'ambiental':'La obra original plantea desconexión humana de la naturaleza. En la Sphere, cientos protegiéndose simultáneamente plantea: ¿cuántos podemos protegernos antes de que el sistema falle? Crítica escalada.',
+  'hola':'¡Hola! Estás en Alcance Futuro. Aquí exploramos cómo Rain Room de Random International podría transformarse en la Sphere. ¿Qué te gustaría saber?',
   'gracias':'¡Con mucho gusto! Hay mucho más que explorar en las otras secciones.',
 };
 
 let open=false,init=false;
-function toggleNova(){open=!open;document.getElementById('nova-panel').classList.toggle('closed',!open);if(open&&!init){init=true;setTimeout(()=>{addM('n','¡Bienvenido al Arte Inmersivo! ✦ Aquí puedes explorar Postcard from Earth, la obra maestra cinematográfica de Darren Aronofsky en la Sphere. ¿Qué te gustaría saber?');setTimeout(()=>addS(['¿Qué es Postcard from Earth?','¿Quién es Darren Aronofsky?','¿Cuál es la experiencia?']),500);},280);}}
+function toggleNova(){open=!open;document.getElementById('nova-panel').classList.toggle('closed',!open);if(open&&!init){init=true;setTimeout(()=>{addM('n','¡Bienvenido al Alcance Futuro! ✦ Aquí exploramos cómo Rain Room de Random International podría transformarse si se llevara a la Sphere. Una especulación técnico-artística sobre lo posible. ¿Qué te interesa?');setTimeout(()=>addS(['¿Qué es Rain Room?','¿Por qué funcionaría aquí?','¿Cuál es la escala?']),500);},280);}}
 function nrm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'');}
 function getR(q){const nq=nrm(q);let best=null,bl=0;for(const[k,v]of Object.entries(KB)){const nk=nrm(k);if(nq.includes(nk)&&nk.length>bl){best=v;bl=nk.length;}}return best;}
 function addM(t,txt){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.className='m '+t;d.innerHTML=`<div class="mb">${txt}</div>`;m.appendChild(d);m.scrollTop=m.scrollHeight;}
 function addS(ss){const m=document.getElementById('pmsgs');const w=document.createElement('div');w.className='m n';const i=document.createElement('div');i.className='sugs';ss.forEach(s=>{const b=document.createElement('button');b.className='sg';b.textContent=s;b.onclick=()=>{w.remove();sw2(s);};i.appendChild(b);});w.appendChild(i);m.appendChild(w);m.scrollTop=m.scrollHeight;}
 function showT(){const m=document.getElementById('pmsgs');const d=document.createElement('div');d.id='typ';d.className='m n';d.innerHTML='<div class="typ-w"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';m.appendChild(d);m.scrollTop=m.scrollHeight;}
 function rmT(){const t=document.getElementById('typ');if(t)t.remove();}
-function sw2(txt){addM('u',txt);showT();setTimeout(()=>{rmT();const r=getR(txt);if(r){addM('n',r);}else{addM('n','Eso aún no lo tengo en mis archivos 🤔 — pero puedes preguntarme algo así:');setTimeout(()=>addS(SUGS_ARTE.slice(0,3)),300);}},620+Math.random()*380);}
+function sw2(txt){addM('u',txt);showT();setTimeout(()=>{rmT();const r=getR(txt);if(r){addM('n',r);}else{addM('n','Eso aún no lo tengo en mis archivos 🤔 — pero puedes preguntarme algo así:');setTimeout(()=>addS(SUGS_ALCANCE.slice(0,3)),300);}},620+Math.random()*380);}
 function snd(){const i=document.getElementById('pi');const t=i.value.trim();if(!t)return;i.value='';sw2(t);}
 </script>
 </body>
